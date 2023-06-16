@@ -1,103 +1,154 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/utils/Strings.sol";
+
+/*
+1. Owner lists the product
+2. Owner begins the auction
+3. Bidders bid on the product
+    a. Bidders can see the current highest bid, previous bids
+    b. Bidder bids with money on top of her previous bid
+        i. Bid validation (value, time, current highest bid)
+        ii. Previous highest bidder withdraw enabled
+    c. Bidder can withdraw her bid (if she is not the highest bidder)
+4. Auction time ends
+5. Winner approves the product and then the contract pays the owner
+6. Unsuccesful bids can still be withdrawn
+*/
 
 contract Auction {
 
-    struct bid {
-        address payable bidder_address;
-        uint bid_amount;
-        bool is_highest;
+    struct product {
+        string product_name;
+        uint256 base_price;
     }
 
-    struct item {
-        string item_id;
-        uint base_price;
-        address payable owner_address;
-        uint[] duration;
+    struct auction {
+        string auction_id;
+        product listed_product;
         bool started;
-        bid[] bid_list;
+        uint256 auction_time;
+        uint256 end_time;
+        address payable owner;
+        uint256 highest_bid;
+        address payable highest_bidder;
+        bool ended;
     }
 
+    mapping(string => mapping(address => uint256)) public withdrawals;
+
+    mapping(string => auction) public auctions;
+
+    // events
+    event RevertMessage(string _message);
+    event AuctionAlreadyAdded(string _auction_id, address _owner, product _product);
+    event AuctionStarted(string _auction_id, address _owner, product _product, uint256 _starting_time, uint256 _auction_time);
     
-    // item[] item_list;
-    mapping (string => item) item_list;
-
-    function add_item (string calldata item_id, uint base_price, address payable owner, uint[] calldata duration) public returns (bool) {
-        
-        if (item_list[item_id].base_price > 0) {
-            return false;
+    // function to create an auction
+    function createAuction (string memory _auction_id, string memory _product_name, uint256 _base_price, uint256 _auction_time) public {
+        if (auctions[_auction_id].owner != address(0)) {
+            emit AuctionAlreadyAdded(_auction_id, auctions[_auction_id].owner, auctions[_auction_id].listed_product);
+            revert();
         }
 
-        item storage _item = item_list[item_id];
-        _item.item_id = item_id;
-        _item.base_price = base_price;
-        _item.owner_address = owner;
-        _item.duration = duration;
-        _item.started = false;
-        return true;
+        auctions[_auction_id].auction_id = _auction_id;
+        auctions[_auction_id].listed_product.product_name = _product_name;
+        auctions[_auction_id].listed_product.base_price = _base_price * 10**15;
+        auctions[_auction_id].started = false;
+        auctions[_auction_id].auction_time = _auction_time;
+        auctions[_auction_id].owner = payable(msg.sender);
+        auctions[_auction_id].highest_bid = 0;
+        auctions[_auction_id].highest_bidder = payable(address(0));
+        auctions[_auction_id].ended = false;
     }
 
-    /*function time_left_to_end_bidding (string calldata item_id) public returns (uint[] memory) {
-        item storage _item = item_list[item_id];
-        require (_item.base_price > 0, "Can't find this product!");
-    }*/
+    function startAuction (string memory _auction_id) public {
+        if (auctions[_auction_id].owner != msg.sender || auctions[_auction_id].started == true) {
+            revert();
+        }
 
-    function start_bid (string calldata item_id) public returns (bool) {
-        require(msg.sender == item_list[item_id].owner_address, "This product does not belong to you!");
-        require(!item_list[item_id].started, "The auction for this product has already been started!");
+        auctions[_auction_id].started = true;
+        auctions[_auction_id].end_time = block.timestamp + auctions[_auction_id].auction_time;
 
-        item storage _item = item_list[item_id];
-        _item.started = true;
-        return true;
+        emit AuctionStarted(_auction_id, auctions[_auction_id].owner, auctions[_auction_id].listed_product, block.timestamp, auctions[_auction_id].auction_time);
     }
 
-    function place_bid (string calldata item_id, uint bid_amount) public returns (bool) {
-        item storage _item = item_list[item_id];
-        require (_item.base_price > 0, "Can't find this product!");
-        require (_item.started == true, "The auction hasn't started yet");
+    function makeBid (string memory _auction_id) external payable {
+
+        if (block.timestamp > auctions[_auction_id].end_time) {
+            auctions[_auction_id].ended = true;
+        }
+
+        if (auctions[_auction_id].started == false || auctions[_auction_id].ended == true) {
+            emit RevertMessage("Auction not started or already ended");
+            revert();
+        }
+
+        uint256 bid_value = msg.value + withdrawals[_auction_id][msg.sender];
+
+        if ((auctions[_auction_id].highest_bid == 0 && bid_value < auctions[_auction_id].listed_product.base_price) || bid_value < auctions[_auction_id].highest_bid) {
+            emit RevertMessage("Bid value is less than the highest bid");
+            revert();
+        }
+
+        if (auctions[_auction_id].highest_bidder != address(0)) {
+            withdrawals[_auction_id][auctions[_auction_id].highest_bidder] += auctions[_auction_id].highest_bid;
+        }
+
+        auctions[_auction_id].highest_bidder = payable(msg.sender);
+        auctions[_auction_id].highest_bid = bid_value;
+    }
+
+    function withdrawBid (string memory _auction_id) external {
+
+        uint256 amount = withdrawals[_auction_id][msg.sender];
+        if (auctions[_auction_id].highest_bidder == msg.sender) {
+            revert();
+        }
+
+        if (amount == 0) {
+            revert();
+        }
+
+        withdrawals[_auction_id][msg.sender] = 0;
+        if (!payable(msg.sender).send(amount)) {
+            withdrawals[_auction_id][msg.sender] = amount;
+        }
+    }
+
+    function approveProduct (string memory _auction_id) external {
+        if (auctions[_auction_id].highest_bidder != msg.sender) {
+            emit RevertMessage("You are not the highest bidder");
+            revert();
+        }
+
+        if (block.timestamp > auctions[_auction_id].end_time) {
+            emit RevertMessage("Auction has ended");
+            auctions[_auction_id].ended = true;
+        }
+
+        if (auctions[_auction_id].ended == false) {
+            emit RevertMessage("Auction has not ended");
+            revert();
+        }
+
+        auctions[_auction_id].owner.transfer(auctions[_auction_id].highest_bid);
+        // if (!payable(auctions[_auction_id].owner).send(auctions[_auction_id].highest_bid)) {
+        //     emit RevertMessage("Owner Transfer failed");
+        //     revert();
+        // }
+    }
+
+
+    // utility functions
+    function getAuctionDetails (string memory _auction_id) public view returns (auction memory) {
         
-        uint current_bid = _item.base_price;
-        bool valid_bid = bid_amount >= current_bid;
+        return auctions[_auction_id];
+    }
 
-        if (_item.bid_list.length > 0) {
-            current_bid = _item.bid_list[_item.bid_list.length - 1].bid_amount;
-            valid_bid = bid_amount >= current_bid + (_item.base_price / 10);
-        }
-
-        require (valid_bid, "Increase the bid by at least 10% the base price!");
-
-        bool withdraw_sent;
-        bool owner_sent;
-
-        if (_item.bid_list.length > 0) {
-            address payable previous_bidder;
-            previous_bidder = _item.bid_list[_item.bid_list.length - 1].bidder_address;
-            
-            (withdraw_sent, ) = previous_bidder.call{value: current_bid}("");
-            
-
-            (owner_sent, ) = _item.owner_address.call{value: bid_amount - current_bid}("");
-            require (owner_sent, "Transaction to owner failed!");
-
-        } else {
-            
-            withdraw_sent = true;
-            (owner_sent, ) = _item.owner_address.call{value: bid_amount}("");
-        }
-
-        require (withdraw_sent, "Withdrawl transaction to previous bidder failed!");
-        require (owner_sent, "Transaction to owner failed!");
-
-        _item.bid_list[_item.bid_list.length - 1].is_highest = false;
-
-        bid storage new_bid = _item.bid_list.push();
-        new_bid.bid_amount = bid_amount;
-        new_bid.bidder_address = payable (msg.sender);
-        new_bid.is_highest = true;
-
-        return true;
+    function getContractBalance () public view returns (uint256) {
+        return address(this).balance;
     }
 
     

@@ -1,9 +1,19 @@
 import React from 'react'
+import "./styles/ItemCard.css"
+import { useDispatch } from 'react-redux'
 
 export default function ItemCard() {
+
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    console.log("clk")
+    dispatch({type: "SET_DISPLAY", payload: "ItemPage"})
+  }
+ 
   return (
     <div>
-        <div className="card" style={{ width: "36rem", margin: "10px"}} onClick={() => {console.log("Clked!")}}>
+        <div className="card" role='button' style={{ width: "36rem", margin: "10px"}} onClick={() => {handleClick()}}>
         <img className="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKMEhy8-UzW5IylOvuqyvXtkcMJNQc8XKf3fK_J4nu1w&usqp=CAU&ec=48600113" alt="Card image cap" />
         <div className="card-body">
           <h5 className="card-title">Product title</h5>

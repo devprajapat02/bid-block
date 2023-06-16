@@ -1,17 +1,17 @@
 import { EthProvider } from "./contexts/EthContext";
-import ItemsDashboard from "./components/ItemsDashboard";
-import ItemPage from "./components/ItemPage";
+import Main from "./components/Main";
 import Navbar from "./components/Navbar";
 
 function App() {
+
   return (
     <EthProvider>
-      <div id="App">
-        <div className="col">
-          
-          <ItemPage />
+        <div id="App">
+          <div className="col">
+            <Navbar />
+            <Main />
+          </div>
         </div>
-      </div>
     </EthProvider>
   );
 }
