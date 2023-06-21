@@ -1,12 +1,106 @@
 const express = require("express")
+const ethers = require('ethers')
 const app = express()
+const abi = require('./abi.json')
+const cors = require('cors')
 
-app.get("/", (req, res) => {
-    res.send("Hello World")
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors())
+
+const contractAddress = '0x84e3D791Ccc65a74874873709Ff6C820e9f3dEA4'
+const network = "http://127.0.0.1:7545"
+
+app.post("/", async (req, res) => {
+
+    try {
+        console.log(req.body)
+        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
+        const contract = await new ethers.Contract("0x32e2F17ef39636432c22A2dFb41C734402D2db77", abi, provider)
+        const tx = await contract.populateTransaction.mint(5)
+        console.log(tx)
+        res.json(
+            {tx: tx}
+        )
+
+    } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
 })
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000")
+
+app.post("/createAuction", async (req, res) => {
+    // console.log(req.params)
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, signer)
+
+        const _auction_id = `${req.body.product_name}_${req.body.address}`
+        await contract.createAuction(_auction_id, req.body.product_name, req.body.base_price, req.body.auction_time)
+        const auction_details = await contract.getAuctionDetails(_auction_id)
+        res.json(auction_details)
+    } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
+})
+
+app.post("/startAuction", async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, signer)
+        await contract.startAuction(req.body.auction_id)
+        const auction_details = await contract.getAuctionDetails(req.body.auction_id)
+        res.json(auction_details)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+app.post("/makeBid", async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, signer)
+
+        await contract.makeBid(req.body.auction_id, {from: req.body.address, value: ethers.BigNumber.from(req.body.bid_value).mul(ethers.BigNumber.from(10).pow(15))})
+        res.send("Bid made")
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+app.post("/withdrawBid", async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, signer)
+
+        contract.withdrawBid(req.body.auction_id, {from: req.body.address})
+        res.send("Bid withdrawn")
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+app.get("/auctionDetails", async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, signer)
+
+        const auction_details = await contract.getAuctionDetails(req.query.auction_id)
+        res.send(auction_details)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+app.listen(5000, () => {
+    console.log("Server running on port 5000")
 })
 
 /*
