@@ -6,6 +6,7 @@ import './App.css'
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './pages/home'
 import MainNavigation from './components/Header/MainNavigation'
+import ItemDesciption from './pages/ItemDesciption'
 
 function App() {
 
@@ -13,10 +14,11 @@ function App() {
     <>
       <BrowserRouter>
       <MainNavigation />
-      
+
       <main>
         <Routes>
           <Route path='/' Component={Home}> </Route>
+          <Route path='/:item/desc' Component={ItemDesciption}></Route>
         </Routes>
         </main>
       </BrowserRouter>
