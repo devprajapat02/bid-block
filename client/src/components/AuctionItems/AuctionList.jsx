@@ -1,12 +1,17 @@
 import React from "react";
-import '../css/AuctionList.css'
+
+import Card from '../UIElements/Card';
+import '../../css/AuctionItems/AuctionList.css'
 import AuctionItem from "./AuctionItem";
 
 const AuctionList = props => {
     if(props.items.length === 0){
         return (
-            <div className="center">
-                <h2>No item found</h2>
+            <div className="place-list center">
+                <Card>
+                    <h2>No item found</h2>
+                    <button>Auction Item</button>
+                </Card>
             </div>
         )
     }
@@ -18,7 +23,10 @@ const AuctionList = props => {
             id = {items.id}
             image ={items.image}
             name ={items.image}
+            title = {items.title}
             desc= {items.desc}
+            creatorId={items.creatorId}
+            startingValue={items.startingValue}
             />
         })}
     </ul>
