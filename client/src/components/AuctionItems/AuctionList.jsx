@@ -22,7 +22,6 @@ const AuctionList = props => {
             key = {items.id}
             id = {items.id}
             image ={items.image}
-            name ={items.image}
             title = {items.title}
             desc= {items.desc}
             creatorId={items.creatorId}

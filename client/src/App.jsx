@@ -7,6 +7,8 @@ import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './pages/home'
 import MainNavigation from './components/Header/MainNavigation'
 import ItemDesciption from './pages/ItemDesciption'
+import formpage from './pages/formpage'
+import formx from './components/AuctionForm/form'
 
 function App() {
 
@@ -18,7 +20,8 @@ function App() {
       <main>
         <Routes>
           <Route path='/' Component={Home}> </Route>
-          <Route path='/:item/desc' Component={ItemDesciption}></Route>
+          <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
+          <Route path='/:userid/listitem' Component={formx}></Route>
         </Routes>
         </main>
       </BrowserRouter>
