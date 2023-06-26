@@ -2,6 +2,7 @@ import React from "react";
 import '../../css/AuctionItems/AuctionItem.css'
 import Card from "../UIElements/Card";
 import Button from '../FormElements/Button'
+import { Link } from "react-router-dom";
 
 const AuctionItem = props => {
     return (
@@ -16,7 +17,7 @@ const AuctionItem = props => {
                 <p>{props.desc}</p>
             </div>
             <div className="place-item__actions">
-                <Button inverse>Bid</Button>
+                <Link to="/item/desc"><Button inverse>Bid</Button></Link>
                 <Button to={'/item/:item/edit'}>Edit</Button>
                 <Button danger>Delete</Button>
             </div>

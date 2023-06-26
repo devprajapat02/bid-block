@@ -20,7 +20,7 @@ function App() {
       <main>
         <Routes>
           <Route path='/' Component={Home}> </Route>
-          <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
+          <Route path='/item/desc' Component={ItemDesciption}></Route>
           <Route path='/:userid/listitem' Component={formx}></Route>
         </Routes>
         </main>

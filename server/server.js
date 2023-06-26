@@ -1,14 +1,14 @@
 const express = require("express")
 const ethers = require('ethers')
 const app = express()
-const abi = require('./abi.json')
+const { abi } = require('./abi.json')
 const cors = require('cors')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
-const contractAddress = '0x84e3D791Ccc65a74874873709Ff6C820e9f3dEA4'
+const contractAddress = '0x0e4eE68d9Fd290B5151C2663504aeF9093954714'
 const network = "http://127.0.0.1:7545"
 
 app.post("/", async (req, res) => {
@@ -86,11 +86,24 @@ app.post("/withdrawBid", async (req, res) => {
     }
 })
 
+app.get("/auctions", async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        //const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, provider)
+
+        const auctions = await contract.auctions("")
+        res.send(auctions)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
 app.get("/auctionDetails", async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
-        const signer = await provider.getSigner(req.body.address)
-        const contract = await new ethers.Contract(contractAddress, abi, signer)
+        // const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract(contractAddress, abi, provider)
 
         const auction_details = await contract.getAuctionDetails(req.query.auction_id)
         res.send(auction_details)
@@ -98,6 +111,7 @@ app.get("/auctionDetails", async (req, res) => {
         res.send(error)
     }
 })
+
 
 app.listen(5000, () => {
     console.log("Server running on port 5000")
