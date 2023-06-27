@@ -1,8 +1,8 @@
 import React from "react";
 
 import Card from '../UIElements/Card';
-import '../../css/AuctionItems/AuctionList.css'
 import AuctionItem from "./AuctionItem";
+import { Grid } from '@mantine/core';
 
 const AuctionList = props => {
     if(props.items.length === 0){
@@ -16,7 +16,7 @@ const AuctionList = props => {
         )
     }
 
-    return <ul>
+    return <Grid grow gutter="lg">
         {props.items.map(items => {
             return <AuctionItem 
             key = {items.id}
@@ -28,7 +28,7 @@ const AuctionList = props => {
             startingValue={items.startingValue}
             />
         })}
-    </ul>
+    </Grid>
 }
 
 export default AuctionList;
