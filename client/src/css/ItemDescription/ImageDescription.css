@@ -1,0 +1,25 @@
+.container {
+    margin: auto;
+    width: 100%;
+    height: 40vh;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+}
+
+.row {
+    display: flex;
+}
+
+.col {
+    padding: 10px;
+    flex: 50%;
+}
+
+img {
+    border-radius: 20px;
+}
+
+.item-title {
+    margin-left: 5%;
+}

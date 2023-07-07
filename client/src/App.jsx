@@ -27,7 +27,7 @@ function App() {
       <MainNavigation />
       <main>
         <Routes>
-          <Route path='/' Component={Home}> </Route>
+        <Route path='/' Component={Home}> </Route>
           <Route path='/auth'></Route>
           <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
           <Route path='/:userid/items' Component={useritems}></Route>
