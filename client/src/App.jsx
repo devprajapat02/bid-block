@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useCallback, useState } from 'react'
 import './App.css'
 
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
@@ -10,23 +8,27 @@ import ItemDesciption from './pages/ItemDesciption'
 import formx from './pages/form'
 import useritems from './pages/useritems'
 import profile from './pages/profile'
+import { AuthContext } from './context/AuthContext'
 
 function App() {
-  const loggedIn= true
-  if(loggedIn){
-    return (
-      <></>
-    );
+  const [isLoggedIn,setIsloggedIn] = useState(false);
 
-  }else{
+  const login = useCallback(() => {
+    setIsloggedIn(true);
+  },[])
+
+  const logout = useCallback(() => {
+    setIsloggedIn(false);
+  },[])
 
   return (
-    <>
+    <AuthContext.Provider value={{isLoggedIn:isLoggedIn,login:login,logout:logout}}>
       <BrowserRouter>
       <MainNavigation />
       <main>
         <Routes>
           <Route path='/' Component={Home}> </Route>
+          <Route path='/auth'></Route>
           <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
           <Route path='/:userid/items' Component={useritems}></Route>
           <Route path='/:userid/listitem' Component={formx}></Route>
@@ -34,9 +36,8 @@ function App() {
         </Routes>
         </main>
       </BrowserRouter>
-    </>
+    </AuthContext.Provider>
   );
-  }
 }
 
 export default App
