@@ -1,15 +1,25 @@
-const express = require("express")
-const ethers = require('ethers')
+// const express = require("express")
+// const ethers = require('ethers')
+// const app = express()
+// const { abi } = require('./abi.json')
+// const cors = require('cors')
+// const fs = require('fs')
+// const createAuctionRouter = require("./routes/createAuction")
+
+const {express, ethers, abi, cors, fs, contractAddress, network} = require('./imports')
 const app = express()
-const { abi } = require('./abi.json')
-const cors = require('cors')
+
+fs.readdirSync('./routes').forEach((file) => {
+    if (file.endsWith('.js')) {
+        const route = require(`./routes/${file}`)
+        const routeName = file.split('.')[0]
+        app.use(`/${routeName}`, route)
+    }
+})
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
-
-const contractAddress = '0x0e4eE68d9Fd290B5151C2663504aeF9093954714'
-const network = "http://127.0.0.1:7545"
 
 app.post("/", async (req, res) => {
 
@@ -29,8 +39,8 @@ app.post("/", async (req, res) => {
     }
 })
 
-
-app.post("/createAuction", async (req, res) => {
+// app.use('/createAuction1', createAuctionRouter)
+app.post("/createAuction1", async (req, res) => {
     // console.log(req.params)
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
@@ -47,7 +57,7 @@ app.post("/createAuction", async (req, res) => {
     }
 })
 
-app.post("/startAuction", async (req, res) => {
+app.post("/startAuction1", async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)
@@ -60,7 +70,7 @@ app.post("/startAuction", async (req, res) => {
     }
 })
 
-app.post("/makeBid", async (req, res) => {
+app.post("/makeBid1", async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)
@@ -73,7 +83,7 @@ app.post("/makeBid", async (req, res) => {
     }
 })
 
-app.post("/withdrawBid", async (req, res) => {
+app.post("/withdrawBid1", async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)
@@ -92,7 +102,7 @@ app.get("/auctions", async (req, res) => {
         //const signer = await provider.getSigner(req.body.address)
         const contract = await new ethers.Contract(contractAddress, abi, provider)
 
-        const auctions = await contract.auctions("")
+        const auctions = await contract.getAuctionIds()
         res.send(auctions)
     } catch (error) {
         res.send(error)

@@ -16,9 +16,13 @@
     "@mantine/form": "^6.0.14",
     "@mantine/hooks": "^6.0.14",
     "dayjs": "^1.11.8",
+    "identicon": "^3.1.1",
+    "identicon.js": "^2.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
     "react-router-dom": "^6.13.0",
+    "react-simple-image-slider": "^2.4.1",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {

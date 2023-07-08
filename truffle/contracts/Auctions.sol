@@ -40,6 +40,8 @@ contract Auction {
 
     mapping(string => auction) public auctions;
 
+    string[] public auction_ids;
+
     // events
     event RevertMessage(string _message);
     event AuctionAlreadyAdded(string _auction_id, address _owner, product _product);
@@ -61,6 +63,8 @@ contract Auction {
         auctions[_auction_id].highest_bid = 0;
         auctions[_auction_id].highest_bidder = payable(address(0));
         auctions[_auction_id].ended = false;
+
+        auction_ids.push(_auction_id);
     }
 
     function startAuction (string memory _auction_id) public {
@@ -145,6 +149,10 @@ contract Auction {
     function getAuctionDetails (string memory _auction_id) public view returns (auction memory) {
         
         return auctions[_auction_id];
+    }
+
+    function getAuctionIds () public view returns (string[] memory) {
+        return auction_ids;
     }
 
     function getContractBalance () public view returns (uint256) {
