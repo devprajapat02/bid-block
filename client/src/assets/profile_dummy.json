@@ -1,0 +1,44 @@
+{
+    "username": "puneet_superstar",
+    "password": "puneet123",
+    "email": "puneet_superstar@gmail.com",
+    "name": "Puneet Superstar",
+    "profile_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVu83Ps0-ptDsSI2U_7zUHcCLr1nZCY87tHA&usqp=CAU",
+    "address": {
+        "local": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94101",
+        "country": "USA"
+    },
+    "auctions": [
+        "5a3a1b2c4e5f6a7b8c9d0e1f",
+        "5a3a1b2c4e5f6a7b8c9d0e1e"
+    ],
+    "bid_history": [
+        {
+            "sno": 1,
+            "timestamp": "2021-09-20T14:48:00",
+            "auction_id": "0x7098629486029b492",
+            "bid_amount": 20.45
+        },
+        {
+            "sno": 2,
+            "timestamp": "2021-09-20T14:48:00",
+            "auction_id": "0x9098629486029b492",
+            "bid_amount": 30.45
+        },
+        {
+            "sno": 3,
+            "timestamp": "2021-09-20T14:48:00",
+            "auction_id": "0xb098629486029b492",
+            "bid_amount": 35.15
+        },
+        {
+            "sno": 4,
+            "timestamp": "2021-09-20T14:48:00",
+            "auction_id": "0x2098629486029b492",
+            "bid_amount": 40.45
+        }
+      ]
+}

@@ -12,7 +12,7 @@
 }
 
 .col {
-    padding: 10px;
+    padding: 1vh;
     flex: 50%;
 }
 
@@ -22,4 +22,35 @@ img {
 
 .item-title {
     margin-left: 5%;
+}
+
+input[type="radio"] {
+    /* appearance: none; */
+    height: 0.5em;
+    width: 1.5em;
+    accent-color: magenta;
+}
+
+.image_arrow {
+    
+    border: 0;
+    height: 100%;
+    width: 100%;
+    font-size: 2em;
+    opacity: 0.3;  
+}
+
+.image_arrow.left {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.image_arrow.right {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.image_arrow:hover {
+    cursor: pointer;
+    opacity: 0.5;
 }
