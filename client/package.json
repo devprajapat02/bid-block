@@ -10,14 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
     "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@mantine/core": "^6.0.14",
     "@mantine/dates": "^6.0.14",
+    "@mantine/ds": "^6.0.14",
     "@mantine/form": "^6.0.14",
     "@mantine/hooks": "^6.0.14",
     "dayjs": "^1.11.8",
+    "framer-motion": "^10.12.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
     "react-router-dom": "^6.13.0",
     "react-transition-group": "^4.4.5"
   },

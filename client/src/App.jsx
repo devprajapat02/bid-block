@@ -9,6 +9,7 @@ import formx from './pages/form'
 import useritems from './pages/useritems'
 import profile from './pages/profile'
 import { AuthContext } from './context/AuthContext'
+import Authentication from './pages/Authentication'
 
 function App() {
   const [isLoggedIn,setIsloggedIn] = useState(false);
@@ -20,15 +21,15 @@ function App() {
   const logout = useCallback(() => {
     setIsloggedIn(false);
   },[])
-
+  
   return (
-    <AuthContext.Provider value={{isLoggedIn:isLoggedIn,login:login,logout:logout}}>
+    <AuthContext.Provider value = {{isLoggedIn : isLoggedIn, login : login, logout : logout}}>
       <BrowserRouter>
       <MainNavigation />
       <main>
         <Routes>
-        <Route path='/' Component={Home}> </Route>
-          <Route path='/auth'></Route>
+          <Route path='/' Component={Home}> </Route>
+          <Route path='/auth' Component={Authentication}></Route>
           <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
           <Route path='/:userid/items' Component={useritems}></Route>
           <Route path='/:userid/listitem' Component={formx}></Route>
