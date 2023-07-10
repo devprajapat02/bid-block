@@ -6,7 +6,8 @@
 // const fs = require('fs')
 // const createAuctionRouter = require("./routes/createAuction")
 
-const {express, ethers, abi, cors, fs, contractAddress, network} = require('./imports')
+const {express, ethers, abi, cors, fs, mongoose, dotenv, contractAddress, network} = require('./imports')
+const { connectDB } = require('./database/connect')
 const app = express()
 
 fs.readdirSync('./routes').forEach((file) => {
@@ -37,6 +38,14 @@ app.post("/", async (req, res) => {
         console.log(error)
         res.send(error)
     }
+})
+
+app.get('/connect', async (req, res) => {
+    try {
+        await connectDB()
+      } catch (e) {
+        console.log(e);
+      }
 })
 
 // app.use('/createAuction1', createAuctionRouter)
