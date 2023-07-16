@@ -9,7 +9,8 @@ const connectDB = async (req, res, next) => {
             useUnifiedTopology: true,
         })
         console.log("MongoDB connected")
-        next()
+        console.log(mongoURL)
+        if (next) next()
     } catch (error) {
         console.log(error)
     }

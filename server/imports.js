@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
 
-const contractAddress = '0x8c1dBbd5F1d85abD31A65F04A4c5C2E33B0E410c'
+const contractAddress = '0x1dcFA8c9CaE22E5C51542599eE9e1cA9a181Ba76'
 const network = "http://127.0.0.1:7545"
 
 module.exports = {
@@ -21,4 +21,6 @@ module.exports = {
     dotenv,
     contractAddress,
     network,
+    // Auction,
+    // User
 }
