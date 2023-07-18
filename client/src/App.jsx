@@ -35,7 +35,6 @@ function App() {
           <Route path='/:userid/items' Component={useritems}></Route>
           <Route path='/:userid/id' Component={Profile}></Route>
           <Route path='/:userid/listitem' Component={formx}></Route>
-          <Route path='/:userid/id' Component={Profile}></Route>
         </Routes>
         </main>
       </BrowserRouter>

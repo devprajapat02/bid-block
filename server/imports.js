@@ -6,6 +6,7 @@ const cors = require('cors')
 const fs = require('fs')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const bodyparser = require('body-parser')
 dotenv.config()
 
 const contractAddress = '0x1dcFA8c9CaE22E5C51542599eE9e1cA9a181Ba76'
@@ -21,6 +22,7 @@ module.exports = {
     dotenv,
     contractAddress,
     network,
+    bodyparser
     // Auction,
     // User
 }

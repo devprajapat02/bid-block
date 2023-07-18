@@ -50,6 +50,10 @@
           "state": "CA",
           "zip": "94101",
           "country": "USA"
+      },
+      "product": {
+        "product_name": "Iphone 14",
+        "base_price": 20.45
       }
     }
   }

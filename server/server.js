@@ -6,9 +6,19 @@
 // const fs = require('fs')
 // const createAuctionRouter = require("./routes/createAuction")
 
-const {express, ethers, abi, cors, fs, mongoose, dotenv, contractAddress, network} = require('./imports')
+const {express, ethers, abi, cors, fs, mongoose, dotenv, contractAddress, network, bodyparser} = require('./imports')
 const { connectDB } = require('./database/connect')
 const app = express()
+
+app.use((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, DELETE');
+    next();
+});
 
 fs.readdirSync('./routes').forEach((file) => {
     if (file.endsWith('.js')) {

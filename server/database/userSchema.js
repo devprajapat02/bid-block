@@ -23,9 +23,9 @@ const addressSchema = new mongoose.Schema({
 })
 
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
+    id:{
+        type:String,
+        required:true,
     },
     passwordHash: {
         type: String,
@@ -41,11 +41,10 @@ const userSchema = new mongoose.Schema({
     },
     address: {
         type: addressSchema,
-        required: true,
     },
     profileImage: {
         type: String,
     },
 })
 
-mongoose.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema)

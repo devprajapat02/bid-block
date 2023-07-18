@@ -1,0 +1,21 @@
+User Table
+- Name
+- Email
+- userid
+- hashedpassword
+- Address
+- profile pic
+- auction
+- bid_history
+
+Product Table
+- auction_id
+- image
+- description
+- product
+- address
+
+
+
+
+
