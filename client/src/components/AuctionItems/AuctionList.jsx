@@ -61,15 +61,14 @@ const AuctionList = props => {
             await addToDB(params)
 
         }}>Temp</button>*/}
-        {props.items.map(items => {
+        {props.items.map((item, id) => {
             return <AuctionItem 
-            key = {items.id}
-            id = {items.id}
-            image ={items.image}
-            title = {items.title}
-            desc= {items.desc}
-            creatorId={items.creatorId}
-            startingValue={items.startingValue}
+            key = {id}
+            auction_id = {item.auction_id}
+            image ={item.images[0]}
+            title = {item.product_name}
+            desc= {item.description}
+            startingValue={item.base_price/1000}
             />
         })}
     </Grid>

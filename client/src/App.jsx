@@ -31,10 +31,10 @@ function App() {
         <Routes>
           <Route path='/' Component={Home}> </Route>
           <Route path='/auth' Component={Authentication}></Route>
-          <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
+          <Route path='/item/:item' Component={ItemDesciption}></Route>
           <Route path='/:userid/items' Component={useritems}></Route>
           <Route path='/:userid/id' Component={Profile}></Route>
-          <Route path='/:userid/listitem' Component={formx}></Route>
+          <Route path='/listitem' Component={formx}></Route>
         </Routes>
         </main>
       </BrowserRouter>
