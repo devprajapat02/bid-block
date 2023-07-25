@@ -2,7 +2,7 @@
 // getItem
 // updateItem
 
-const { express, ethers, app, abi, cors, contractAddress, network, User} = require('../imports.js')
+const { express, ethers, app, abi, cors, contractAddress, network, User, auctionParser} = require('../imports.js')
 const Auction = require('../database/auctionSchema.js')
 const { connectDB } = require('../database/connect.js')
 const router = express.Router()
@@ -31,12 +31,23 @@ router.get('/getItems', async (req, res) => {
 router.get('/getItems/upcoming', async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
-        //const signer = await provider.getSigner(req.body.address)
         const contract = await new ethers.Contract(contractAddress, abi, provider)
         
         const page_id = req.query.page_id>=0 ? req.query.page_id : 0
         const auctions = await contract.getUpcomingIds(page_id)
-        res.send(auctions)
+        if (!req.query.briefs) {
+            res.send(auctions)
+            return
+        }
+
+        let briefs = []
+        for (let i=0; i<auctions.length; i++) {
+            if (auctions[i] == "") continue
+            const res = await fetchCentralData(auctions[i])
+            if (res) briefs.push(res)
+        }
+        console.log("sent briefs")
+        res.send(briefs)
     } catch (error) {
         res.send(error)
     }
@@ -80,13 +91,17 @@ const fetchBlockData = async (auction_id) => {
     const contract = await new ethers.Contract(contractAddress, abi, provider)
 
     const auction = await contract.getAuctionDetails(auction_id)
-    return auction
+    return auctionParser(auction)
 }
 
 const fetchCentralData = async (auction_id) => {
     await connectDB()
-    const auction = await Auction.findOne({auction_id: auction_id})
-    return auction
+    try {
+        const auction = await Auction.findOne({auction_id: auction_id})
+        return auction
+    } catch {
+        return null
+    }
 }
 
 router.get('/getItem', async (req, res) => {

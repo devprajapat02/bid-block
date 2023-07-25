@@ -55,24 +55,24 @@ export default function ImageDescription(props) {
                 {ImageViewer()}
             <div className='col'>
                 <div className='row item-title' style={{fontSize: '40px', fontWeight: 'bolder', marginTop: '2%'}}>
-                    {props.meta.block_data.product.product_name}
+                    {props.meta.block_data.product_name}
                 </div>
                 <div className='row item-title' style={{fontSize: '15px', color: 'grey'}}>
                     ID: {props.meta.block_data.auction_id}
                 </div>
                 <hr style={{width: '90%', marginTop: '5%', border: '1px solid rgb(50, 50, 50)'}} />
                 <div className='row item-title' style={{fontSize: '25px', fontWeight: 'bold', marginTop: '5%'}}>
-                    {props.meta.block_data.highest_bid} MATIC
+                    {props.meta.block_data.highest_bid.bid_value? `${props.meta.block_data.highest_bid.bid_value} MATIC`: "No Bids Yet"}
                 </div>
                 <div className='row item-title' style={{fontSize: '15px'}}>
-                    Base Price: {props.meta.block_data.product.base_price} MATIC
+                    Base Price: {props.meta.block_data.base_price} MATIC
                 </div>
-                <div className='row item-title' style={{fontSize: '15px', marginTop: '4vh'}}>
+                {/* <div className='row item-title' style={{fontSize: '15px', marginTop: '4vh'}}>
                     {props.meta.central_data.address.local}, {props.meta.central_data.address.city}, ({props.meta.central_data.address.zip})
                 </div>
                 <div className='row item-title' style={{fontSize: '15px'}}>
                     {props.meta.central_data.address.state}, {props.meta.central_data.address.country}
-                </div>
+                </div> */}
             </div>
         </div>
     </>

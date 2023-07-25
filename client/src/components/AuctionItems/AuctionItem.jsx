@@ -1,5 +1,4 @@
 import { Card, Image, Text, Badge, Button, Group,Grid ,rem} from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
 
 const AuctionItem = props=> {
   const navigate = useNavigate();
@@ -29,9 +28,11 @@ const AuctionItem = props=> {
         {props.desc}
       </Text>
 
-      <Button variant="light" color="blue" fullWidth mt="md" radius="md" onClick={()=>navigateProduct()}>
-        Place a Bid
-      </Button>
+      <Link to={`/item/${props.auction_id}`}>
+        <Button variant="light" color="blue" fullWidth mt="md" radius="md" onClick={()=>navigateProduct()}>
+          Place a Bid
+        </Button>
+      </Link>
     </Card>
     </Grid.Col>
   );

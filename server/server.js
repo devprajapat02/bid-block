@@ -37,15 +37,31 @@ app.post("/", async (req, res) => {
     try {
         console.log(req.body)
         const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
-        const contract = await new ethers.Contract("0x32e2F17ef39636432c22A2dFb41C734402D2db77", abi, provider)
-        const tx = await contract.populateTransaction.mint(5)
+        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
+        //const tx = await contract.populateTransaction.mint(5)
+        const _auction_id = `${req.body.product_name}_${req.body.address}`
+        const tx = await contract.populateTransaction.createAuction(_auction_id, req.body.product_name, req.body.base_price, req.body.auction_time)
         console.log(tx)
+        
         res.json(
             {tx: tx}
         )
 
     } catch (error) {
         console.log(error)
+        res.send(error)
+    }
+})
+
+app.get('/test', async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
+        //const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
+
+        const auctions = await contract.getAuctionIds()
+        res.send(auctions)
+    } catch (error) {
         res.send(error)
     }
 })

@@ -33,9 +33,10 @@ const addToContract = async (req, res, next) => {
         const contract = await new ethers.Contract(contractAddress, abi, signer)
 
         const _auction_id = `${req.body.product_name}_${req.body.address}`
-        await contract.createAuction(_auction_id, req.body.product_name, req.body.base_price, req.body.auction_time)
-        const auction_details = await contract.getAuctionDetails(_auction_id)
-        next()
+        const tx = await contract.populateTransaction.createAuction(_auction_id, req.body.product_name, req.body.base_price, req.body.auction_time)
+        res.status(200).json({
+            tx: tx,
+        })        
 
     } catch (error) {
         console.log(error)
@@ -63,8 +64,21 @@ const addToDB = async (req, res, next) => {
     }
 }
 
+const verifyTransaction = async (req, res, next) => {
+    const tx_hash = req.body.tx
+    if (!tx_hash) res.status(400).json({error: "Missing transaction hash"})
 
-router.post("/", validateParams, addToContract, connectDB, addToDB, async (req, res) => {
+    const provider = new ethers.providers.JsonRpcProvider(network)
+    const reciept = await provider.getTransactionReceipt(tx_hash)
+    if (!reciept) res.status(400).json({error: "Transaction not found"})
+    else next()
+}
+
+
+router.post("/", validateParams, addToContract)
+
+router.post("/mongo", validateParams, verifyTransaction, connectDB, addToDB, async (req, res) => {
+
     res.status(200).json({
         auction_details: req.body,
         message: "Auction created successfully!",
