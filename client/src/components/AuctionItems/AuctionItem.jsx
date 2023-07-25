@@ -1,4 +1,6 @@
 import { Card, Image, Text, Badge, Button, Group,Grid ,rem} from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AuctionItem = props=> {
   const navigate = useNavigate();
