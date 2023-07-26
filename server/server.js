@@ -55,12 +55,7 @@ app.post("/", async (req, res) => {
 
 app.get('/test', async (req, res) => {
     try {
-        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
-        //const signer = await provider.getSigner(req.body.address)
-        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
-
-        const auctions = await contract.getAuctionIds()
-        res.send(auctions)
+        res.send("Test endpoint")
     } catch (error) {
         res.send(error)
     }

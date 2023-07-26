@@ -13,6 +13,11 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -113,6 +118,11 @@
 			{
 				"internalType": "uint256",
 				"name": "_base_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_starting_time",
 				"type": "uint256"
 			},
 			{
@@ -254,6 +264,11 @@
 			},
 			{
 				"internalType": "uint256",
+				"name": "starting_time",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
 				"name": "auction_time",
 				"type": "uint256"
 			},
@@ -341,6 +356,11 @@
 						"internalType": "bool",
 						"name": "started",
 						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "starting_time",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -493,6 +513,32 @@
 				"internalType": "string[]",
 				"name": "",
 				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "live_count",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "past_count",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

@@ -91,7 +91,7 @@ const fetchBlockData = async (auction_id) => {
     const contract = await new ethers.Contract(contractAddress, abi, provider)
 
     const auction = await contract.getAuctionDetails(auction_id)
-    return auctionParser(auction)
+    return (auction)
 }
 
 const fetchCentralData = async (auction_id) => {

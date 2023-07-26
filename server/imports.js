@@ -7,12 +7,14 @@ const fs = require('fs')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const bodyparser = require('body-parser')
+const crypto = require('crypto-js')
+const cron = require('node-cron')
 dotenv.config()
 
 // const contractAddress = '0x1dcFA8c9CaE22E5C51542599eE9e1cA9a181Ba76'
 // const network = "http://127.0.0.1:7545"
 
-const contractAddress = "0x5962360fC2964A68F18ceEAD25faa5c40B6d353b"
+const contractAddress = "0x617cB8C2F929962231bF63A98B4575a2d13C1A7A"
 const network = "https://rpc-mumbai.maticvigil.com/"
 
 const bidParser = (data) => {
@@ -40,6 +42,11 @@ const auctionParser = (data) => {
     return ret
 }
 
+const cronTimer = (time) => {
+    const ob = new Date(time)
+    return `${ob.getMinutes()} ${ob.getHours()} ${ob.getDate()} ${ob.getMonth()+1} *`
+}
+
 module.exports = {
     express,
     ethers,
@@ -51,5 +58,8 @@ module.exports = {
     contractAddress,
     network,
     bodyparser,
-    auctionParser
+    crypto,
+    cron,
+    auctionParser,
+    cronTimer
 }
