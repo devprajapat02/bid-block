@@ -1,9 +1,13 @@
 {
+  "scripts": {
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\""
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@mantine/core": "^6.0.14",
     "@mantine/dates": "^6.0.14",
     "@mantine/hooks": "^6.0.14",
+    "concurrently": "^8.2.0",
     "dayjs": "^1.11.8",
     "react-transition-group": "^4.4.5"
   }

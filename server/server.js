@@ -58,20 +58,12 @@ app.post("/", async (req, res) => {
 
 app.post('/test', async (req, res) => {
     try {
-        res.cookie("alpha",{val : 88},{
-            httpOnly: false,
-            sameSite : 'None',
-            withCredentials : true,
-            maxAge: 1000 * 60 * 60
-        });
-        res.cookie("beta",{val:88},{
-            httpOnly: false,
-            sameSite : 'None',
-            withCredentials : true,
-            maxAge: 1000 * 60 * 60
-        });
-        console.log(req.cookies)
-        res.send()
+        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
+        //const signer = await provider.getSigner(req.body.address)
+        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
+
+        const auctions = await contract.getAuctionIds()
+        res.send(auctions)
     } catch (error) {
         res.send(error)
     }

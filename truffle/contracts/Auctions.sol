@@ -19,6 +19,12 @@ pragma solidity ^0.8.4;
 
 contract Auction {
 
+    address owner;
+
+    constructor () {
+        owner = msg.sender;
+    }
+
     struct product {
         string product_name;
         uint256 base_price;
@@ -35,6 +41,7 @@ contract Auction {
         uint256 internal_id;
         product listed_product;
         bool started;
+        uint256 starting_time;
         uint256 auction_time;
         uint256 end_time;
         address payable owner;
@@ -60,7 +67,7 @@ contract Auction {
     event AuctionStarted(string _auction_id, address _owner, product _product, uint256 _starting_time, uint256 _auction_time);
     
     // function to create an auction
-    function createAuction (string memory _auction_id, string memory _product_name, uint256 _base_price, uint256 _auction_time) public {
+    function createAuction (string memory _auction_id, string memory _product_name, uint256 _base_price, uint256 _starting_time, uint256 _auction_time) public {
         if (auctions[_auction_id].owner != address(0)) {
             emit AuctionAlreadyAdded(_auction_id, auctions[_auction_id].owner, auctions[_auction_id].listed_product);
             revert();
@@ -71,6 +78,7 @@ contract Auction {
         auctions[_auction_id].listed_product.product_name = _product_name;
         auctions[_auction_id].listed_product.base_price = _base_price * 10**15;
         auctions[_auction_id].started = false;
+        auctions[_auction_id].starting_time = _starting_time;
         auctions[_auction_id].auction_time = _auction_time;
         auctions[_auction_id].owner = payable(msg.sender);
         bid memory empty_bid = bid(0, 0, payable (address(0)));
@@ -81,17 +89,18 @@ contract Auction {
     }
 
     function startAuction (string memory _auction_id) public {
-        if (auctions[_auction_id].owner != msg.sender || auctions[_auction_id].started == true) {
+        if ((auctions[_auction_id].owner != msg.sender && msg.sender != owner) || auctions[_auction_id].started == true) {
             revert();
         }
 
         auctions[_auction_id].started = true;
+        auctions[_auction_id].starting_time = block.timestamp;
         auctions[_auction_id].end_time = block.timestamp + auctions[_auction_id].auction_time;
         
-        auctions[_auction_id].internal_id = live_count + past_count;
         auctions[auction_ids[live_count + past_count]].internal_id = auctions[_auction_id].internal_id;
-
         auction_ids[auctions[_auction_id].internal_id] = auction_ids[live_count + past_count];
+        
+        auctions[_auction_id].internal_id = live_count + past_count;
         auction_ids[live_count + past_count] = _auction_id;
         live_count += 1;
 
@@ -144,7 +153,7 @@ contract Auction {
     }
 
     function endAuction (string calldata _auction_id) public {
-        if (auctions[_auction_id].owner != msg.sender || auctions[_auction_id].ended == true || auctions[_auction_id].end_time < block.timestamp) {
+        if ((auctions[_auction_id].owner != msg.sender && msg.sender != owner) || auctions[_auction_id].ended == true) {
             revert();
         }
 
