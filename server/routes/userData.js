@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken')
 const checkAuth = require('../check-auth.js') 
 const cookieParser = require('cookie-parser')
 const Auction = require('../database/auctionSchema.js')
-const { connectDB } = require('../database/connect.js')
+const { connectDB } = require('../database/connect.js');
+const { trusted } = require('mongoose');
 const router = express.Router()
 
 router.use(express.json())
@@ -99,12 +100,12 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
         );
         
         res.cookie('jwt',token,{
-            httpOnly: false,
+            httpOnly: true,
             withCredentials : true,
             maxAge: 1000 * 60 * 60
         }) 
         res.cookie('userId',id,{
-            httpOnly: false,
+            httpOnly: trusted,
             withCredentials : true,
             maxAge: 1000 * 60 * 60
         }) 
@@ -164,13 +165,11 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
 
             res.cookie('jwt',token,{
                 httpOnly: true,
-                sameSite : 'None',
                 withCredentials : true,
                 maxAge: 1000 * 60 * 60
             })
             res.cookie('userId',existingUser.id,{
                 httpOnly: true,
-                sameSite : 'None',
                 withCredentials : true,
                 maxAge: 1000 * 60 * 60
             })        
