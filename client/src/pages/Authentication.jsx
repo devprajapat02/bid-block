@@ -17,6 +17,7 @@ import {
 import { GoogleButton,TwitterButton } from "../components/Authentication/SocialButtons";
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
+import axios from 'axios';
 
 const Authentication  = props => {
   const Auth = useContext(AuthContext);
@@ -36,13 +37,41 @@ const Authentication  = props => {
     },
   });
 
-  function onSubmithandler(props){
+  async function onSubmithandler(props){
     console.log(props)
     if(type === "login"){
-        Auth.login()
-        console.log("Successfully logged in!")
+      try{
+
+        const res = await axios.post('http://localhost:5000/userData/login', props, {withCredentials:true});
+        console.log(res);
+        if(res.status === 200){
+          console.log("Successfully logged In!")
+          Auth.login();
+        }else{
+          console.log(res.error);
+        }
+
+      } catch(err){
+         console.log("Problem in login , please try again.", err)
+      }
+
     } else if (type === "register"){
-        console.log("Successfully registered!")
+
+      try{
+
+        const res = await axios.post('http://localhost:5000/userData/signup',props,{withCredentials:true});
+        console.log(res);
+        if(res.status === 200){
+          console.log("Successfully registered!")
+          Auth.login();
+        }else{
+          console.log(res.error);
+        }
+
+      } catch (err) {
+        console.log("Problem in registeration , please try again.",err)
+      }
+
     }else{
         console.log("Error : Check Authentication System")
     }

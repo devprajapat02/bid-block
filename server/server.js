@@ -10,12 +10,17 @@ const {express, ethers, abi, cors, fs, mongoose, dotenv, contractAddress, networ
 const { connectDB } = require('./database/connect')
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({credentials:true,origin : 'http://localhost:5173'}))
+
 app.use((req,res,next) => {
-    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
     res.setHeader(
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     );
+    res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, DELETE');
     next();
 });
@@ -28,9 +33,7 @@ fs.readdirSync('./routes').forEach((file) => {
     }
 })
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
+// {credentials:true,origin : 'http://localhost:5173'}
 
 app.post("/", async (req, res) => {
 
@@ -53,14 +56,22 @@ app.post("/", async (req, res) => {
     }
 })
 
-app.get('/test', async (req, res) => {
+app.post('/test', async (req, res) => {
     try {
-        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
-        //const signer = await provider.getSigner(req.body.address)
-        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
-
-        const auctions = await contract.getAuctionIds()
-        res.send(auctions)
+        res.cookie("alpha",{val : 88},{
+            httpOnly: false,
+            sameSite : 'None',
+            withCredentials : true,
+            maxAge: 1000 * 60 * 60
+        });
+        res.cookie("beta",{val:88},{
+            httpOnly: false,
+            sameSite : 'None',
+            withCredentials : true,
+            maxAge: 1000 * 60 * 60
+        });
+        console.log(req.cookies)
+        res.send()
     } catch (error) {
         res.send(error)
     }

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const AuctionItem = props=> {
   const navigate = useNavigate();
   const navigateProduct = () => {
-    navigate(`item/${props.id}/desc`);
+    navigate(`item/${props.id}`);
   }
 
   return (

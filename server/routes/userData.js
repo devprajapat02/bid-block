@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const checkAuth = require('../check-auth.js') 
+const cookieParser = require('cookie-parser')
 const Auction = require('../database/auctionSchema.js')
 const { connectDB } = require('../database/connect.js')
 const router = express.Router()
@@ -29,6 +30,7 @@ const validateParams = (req, res, next) => {
 }
 
 router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
     if(!req.body.name) {
         res.status(400).json({error: "Missing Parameter - Name"})
         return ;
@@ -38,7 +40,7 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
 
     // Validating input
     if(password.toString().length < 7){
-        return res.status(400).json({error: "Password length must be atlesat 7."});
+        return res.status(400).json({error: "Password length must be atleast 7."});
     }else if(!emailRegex.test(email.toString())){
         return res.status(400).json({error: "Not a valid email."});
     }else if( !name.toString().length > 0){
@@ -95,6 +97,17 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
             '2_rupee_ki_pepsi_garvit_bhai_sexy',
             {expiresIn:"1h"}
         );
+        
+        res.cookie('jwt',token,{
+            httpOnly: false,
+            withCredentials : true,
+            maxAge: 1000 * 60 * 60
+        }) 
+        res.cookie('userId',id,{
+            httpOnly: false,
+            withCredentials : true,
+            maxAge: 1000 * 60 * 60
+        }) 
 
         return res.status(200).json({message : "You are successfully registered!",
                         userId : id, email : email, token : token });
@@ -104,7 +117,7 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
 })
 
 router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
-    
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
     const {email,password} = req.body;
 
     // validate input
@@ -148,6 +161,19 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
                 '2_rupee_ki_pepis_garvit_bhai_sexy',
                 {expiresIn : "1h"}
             );
+
+            res.cookie('jwt',token,{
+                httpOnly: true,
+                sameSite : 'None',
+                withCredentials : true,
+                maxAge: 1000 * 60 * 60
+            })
+            res.cookie('userId',existingUser.id,{
+                httpOnly: true,
+                sameSite : 'None',
+                withCredentials : true,
+                maxAge: 1000 * 60 * 60
+            })        
         } catch(error) {
             return res.status(400).json({error:"Login failed, please try again."})
         }

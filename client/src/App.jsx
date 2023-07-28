@@ -14,6 +14,10 @@ import Profile from './pages/Profile'
 
 function App() {
   const [isLoggedIn,setIsloggedIn] = useState(false);
+  const [token,setToken] = useState(null);
+  const [userId,setUserId] = useState(null);
+
+  
 
   const login = useCallback(() => {
     setIsloggedIn(true);
@@ -29,10 +33,10 @@ function App() {
     routes = (
       <Routes>
         <Route path='/' Component={Home}> </Route>
-        <Route path='/item/:item/desc' Component={ItemDesciption}></Route>
+        <Route path='/item/:item' Component={ItemDesciption}></Route>
         <Route path='/:userid/items' Component={useritems}></Route>
         <Route path='/:userid/id' Component={Profile}></Route>
-        <Route path='/:userid/listitem' Component={formx}></Route>
+        <Route path='/listitem' Component={formx}></Route>
         <Route path="*" Component={Redirect} ></Route>
       </Routes>
     )
