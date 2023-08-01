@@ -48,7 +48,7 @@ const Authentication  = props => {
           console.log("Successfully logged In!")
           Auth.login();
         }else{
-          console.log(res.error);
+          console.log(res.data.error);
         }
 
       } catch(err){
@@ -65,7 +65,7 @@ const Authentication  = props => {
           console.log("Successfully registered!")
           Auth.login();
         }else{
-          console.log(res.error);
+          console.log(res.data.error);
         }
 
       } catch (err) {

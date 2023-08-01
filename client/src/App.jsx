@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import './App.css'
+import axios from 'axios'
 
 import {BrowserRouter,Routes,Route,Navigate, useNavigate} from 'react-router-dom'
 import Home from './pages/home'
@@ -14,10 +15,6 @@ import Profile from './pages/Profile'
 
 function App() {
   const [isLoggedIn,setIsloggedIn] = useState(false);
-  const [token,setToken] = useState(null);
-  const [userId,setUserId] = useState(null);
-
-  
 
   const login = useCallback(() => {
     setIsloggedIn(true);
@@ -26,6 +23,22 @@ function App() {
   const logout = useCallback(() => {
     setIsloggedIn(false);
   },[])
+
+  const checkState = async () => {
+    try{
+      const res = await axios.post('http://localhost:5000/userData/verify', {}, {withCredentials:true});
+      console.log(res);
+      if(res.status === 200 ){
+          console.log("State restored")
+          login();
+      }else{
+        console.log(res.data.message);
+      }
+
+    } catch(err){
+       console.log("Problem in checking logging state , please try again.", err)
+    }
+  }
   
   let routes;
 
@@ -49,6 +62,10 @@ function App() {
       </Routes>
     )
   }
+
+  useEffect(() => {
+    checkState();
+  }, []);
 
   return (
     <AuthContext.Provider value = {{isLoggedIn : isLoggedIn, login : login, logout : logout}}>

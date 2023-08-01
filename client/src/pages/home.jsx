@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { SegmentedControl } from '@mantine/core';
 import axios from "axios";
 import AuctionList from "../components/AuctionItems/AuctionList";
 
 function Home(){
 
     const [AuctionItems, setAuctionItems] = useState([])
+    const [value, setValue] = useState('ongoing');
 
     const fetchAuctions = async () => {
         const res = await axios.get("http://localhost:5000/auctionData/getItems/upcoming?briefs=true")
@@ -29,8 +31,27 @@ function Home(){
 
     useEffect(() => {
         fetchAuctions()
-    }, [])
-    return <AuctionList items={AuctionItems} />;
+    }, [value])
+  
+    return (
+    <>
+    <SegmentedControl
+      value={value}
+      onChange={setValue}
+      data={[
+        { label: 'Ongoing', value: 'ongoing' },
+        { label: 'Past', value: 'past' },
+        { label: 'Upcoming', value: 'upcoming' },
+      ]}
+      mb={25}
+      radius={16}
+      transitionDuration={500}
+      transitionTimingFunction="linear"
+      size="md"
+    />
+    <AuctionList items={AuctionItems} />
+    </>
+  );
 }
 
 export default Home;

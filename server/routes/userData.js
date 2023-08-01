@@ -95,7 +95,7 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
     try{
         token = jwt.sign(
             {userId : id ,email : email},
-            '2_rupee_ki_pepsi_garvit_bhai_sexy',
+            process.env.SECRET_STR,
             {expiresIn:"1h"}
         );
         
@@ -159,7 +159,7 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
         try{
             token = jwt.sign(
                 {userId : existingUser.id, email : existingUser.email},
-                '2_rupee_ki_pepis_garvit_bhai_sexy',
+                process.env.SECRET_STR,
                 {expiresIn : "1h"}
             );
 
@@ -178,14 +178,63 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
         }
         res.status(200).json({userId : existingUser.id ,email : existingUser.email ,token : token});
     }else{
-        res.status(400).json({message : "Your credentials are incorrect, please try again with correct credentials."});
+        res.status(400).json({error : "Your credentials are incorrect, please try again with correct credentials."});
     }
 
 })
 
-router.post('/id', checkAuth , async (req , res, next ) => {
-    // still left
-    res.status(200).json({user : DUMMY});
+router.post('/id', checkAuth , connectDB , async (req , res, next ) => {
+    const id = req.cookies.userId;
+    console.log("userId :" + id);
+    try {
+        const User = require('../database/userSchema.js')
+        const existingUser = await User.findOne({id:id});
+        console.log(existingUser)
+        return res.status(200).json({user : existingUser})
+    } catch(err){
+        return res.status(400).json({message : "Error in fetching user data , please try again!"})
+    }
+})
+
+router.post('/logout', checkAuth, async (req , res, next) => {
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    try {
+        console.log(req.cookies)
+        res.clearCookie("jwt");
+        res.clearCookie("userId");
+        res.status(200).json({message : "Successfully logged out!"});
+    } catch (err) {
+        res.status(400).json({message : "Error in logging out."});
+    }
+})
+
+router.post('/verify', async (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    try {
+        let cookies = {};
+        if (!req.headers.cookie) {
+            return res.status(201).json({message : "Not logged In! No cookie present"})
+        } 
+
+        const cookiesArray = req.headers.cookie.split(';');
+
+        cookiesArray.forEach((cookie) => {
+            const [key, value] = cookie.trim().split('=');
+            cookies[key] = value;
+        });
+
+        req.cookies = cookies;
+
+        const token = req.cookies.jwt;
+        console.log(`Cookie parsed : ${token}`);
+        if (!token){
+            return res.status(201).json({message : "Not logged In! No token present"})
+        }
+        const decodedToken = await jwt.verify(token , process.env.SECRET_STR);
+        return res.status(200).json({message : "Logged In!"})
+    } catch (error) {
+        return res.status(201).json({message : "Not logged In!"})
+    }
 })
 
 module.exports = router

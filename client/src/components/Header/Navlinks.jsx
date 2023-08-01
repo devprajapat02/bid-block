@@ -1,5 +1,5 @@
 import {React,useContext} from "react";
-
+import axios from "axios";
 import "../../css/Header/Navlinks.css";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -8,9 +8,20 @@ import { Button } from "@mantine/core";
 const Navlinks = props =>{
     const auth = useContext(AuthContext);
     
-    function logoutHandler(){
-        console.log("Successfully logged out!")
-        auth.logout()
+    async function logoutHandler(){
+        try{
+            const res = await axios.post('http://localhost:5000/userData/logout', {}, {withCredentials:true});
+            console.log(res);
+            if(res.status === 200){
+                console.log("Successfully logged out!")
+                auth.logout()
+            }else{
+              console.log(res.data.error);
+            }
+    
+          } catch(err){
+             console.log("Problem in logout , please try again.", err)
+        }
     }
 
     return <ul className="nav-links">
@@ -39,7 +50,7 @@ const Navlinks = props =>{
         </li>}
 
         {auth.isLoggedIn && <li>
-            <Button type="submit"onClick={()=>logoutHandler()} >Logout</Button>
+            <Button type="submit" onClick={logoutHandler} >Logout</Button>
         </li>}
     </ul>
 };

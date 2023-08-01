@@ -22,6 +22,21 @@ const addressSchema = new mongoose.Schema({
     },
 })
 
+const bidSchema = new mongoose.Schema({
+    timestamp:{
+        type : String,
+        required:true,
+    },
+    auction_id:{
+        type : String,
+        required:true,
+    },
+    bid_amount:{
+        type : Number,
+        required:true,
+    }
+})
+
 const userSchema = new mongoose.Schema({
     id:{
         type:String,
@@ -45,6 +60,8 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
     },
+    auctions: [String],
+    bid_history: [bidSchema],
 })
 
 module.exports = mongoose.model('User', userSchema)
