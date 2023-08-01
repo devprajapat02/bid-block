@@ -7,7 +7,7 @@ export default function BidHistory(props) {
   console.log(props.meta.block_data.bids)
   return (
     <div className='grid' style={{marginTop: '5%', height: '27vh', overflow: 'auto'}}>
-    <div className='row' style={{backgroundColor: 'rgb(30, 30, 30)'}}>
+    <div className='row'>
       <div className='col' >S.No</div>
       <div className='col' >Timestamp</div>
       <div className='col'  style={{flex: '60%'}}>Bidder Address</div>
@@ -15,9 +15,10 @@ export default function BidHistory(props) {
     </div>
 
     {props.meta.block_data.bids.map((item, index) => {
-      const rowColor = index % 2 == 1 ? 'rgb(30, 30, 30)' : 'black'
+      const rowColor = index % 2 == 0 ? 'rgb(30, 30, 30)' : 'black'
       const _style = {
-        backgroundColor: rowColor
+        backgroundColor: rowColor,
+        height: '5vh',
       }
       const _ret = <div className='row' key={index} style={_style}>
         <div className='col' >{index+1}</div>

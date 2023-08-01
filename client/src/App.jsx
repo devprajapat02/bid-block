@@ -2,6 +2,9 @@ import { useCallback, useState, useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
 
+import { ethers } from 'ethers'
+
+
 import {BrowserRouter,Routes,Route,Navigate, useNavigate} from 'react-router-dom'
 import Home from './pages/home'
 import MainNavigation from './components/Header/MainNavigation'
@@ -75,6 +78,34 @@ function App() {
           {routes}
         </main>
       </BrowserRouter>
+
+      {/*
+        Temporary code for development purposes
+      */}
+
+      <div>
+        <h3>Dev mode</h3>
+        <button onClick={() => {
+          const fn = async () => {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+            const res = await axios.post('http://localhost:5000/emergencyWithdraw', {address: accounts[0]})
+            
+            const provider = new ethers.providers.Web3Provider(window.ethereum)
+            const signer = provider.getSigner(accounts[0])
+            const tx = await signer.sendTransaction(res.data.tx)
+            await tx.wait()
+            console.log('tokens withdrawn')
+          }
+
+          fn()
+        }}>Empty Contract Balance</button>
+      </div>
+
+      {/*
+        Temporary code for development purposes
+      */}
+
+      
     </AuthContext.Provider>
   );
 }

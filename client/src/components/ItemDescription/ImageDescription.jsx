@@ -62,10 +62,10 @@ export default function ImageDescription(props) {
                 </div>
                 <hr style={{width: '90%', marginTop: '5%', border: '1px solid rgb(50, 50, 50)'}} />
                 <div className='row item-title' style={{fontSize: '25px', fontWeight: 'bold', marginTop: '5%'}}>
-                    {props.meta.block_data.highest_bid.bid_value? `${props.meta.block_data.highest_bid.bid_value} MATIC`: "No Bids Yet"}
+                    {props.meta.block_data.highest_bid.bid_amount? `${parseInt(props.meta.block_data.highest_bid.bid_amount)/1000} MATIC`: "No Bids Yet"}
                 </div>
                 <div className='row item-title' style={{fontSize: '15px'}}>
-                    Base Price: {props.meta.block_data.base_price} MATIC
+                    Base Price: {parseInt(props.meta.block_data.base_price)/1000} MATIC
                 </div>
                 {/* <div className='row item-title' style={{fontSize: '15px', marginTop: '4vh'}}>
                     {props.meta.central_data.address.local}, {props.meta.central_data.address.city}, ({props.meta.central_data.address.zip})

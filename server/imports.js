@@ -14,7 +14,7 @@ dotenv.config()
 // const contractAddress = '0x1dcFA8c9CaE22E5C51542599eE9e1cA9a181Ba76'
 // const network = "http://127.0.0.1:7545"
 
-const contractAddress = "0x2e643320b6b410E9aF26388193BE78240c52880E"
+const contractAddress = "0x40A66398F6b8758090075a6b2a054dCADeB57a60"
 const network = "https://rpc-mumbai.maticvigil.com/"
 
 const bidParser = (data) => {

@@ -262,6 +262,13 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "emptyContractBalance",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -480,6 +487,30 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_bidder",
+				"type": "address"
+			}
+		],
+		"name": "getWithdrawalAmount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "live_count",
 		"outputs": [
@@ -541,7 +572,7 @@
 		],
 		"name": "withdrawBid",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{

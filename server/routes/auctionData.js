@@ -122,6 +122,33 @@ router.get('/getItem', async (req, res) => {
 })
 
 
+// endpoint to get withdrawable amount
+
+router.post('/getWithdrawalAmount', async (req, res, next) => {
+    
+    if (!req.body.address) res.status(400).json({error: "Missing parameter - Address"})
+    
+    else if (!ethers.utils.isAddress(req.body.address)) res.status(400).json({error: "Invalid parameters - Address not found"})
+    
+    else if (!req.body.auction_id) res.status(400).json({error: "Missing parameter - Auction ID"})
+    
+    else next()
+
+}, async (req, res) => {
+
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const contract = await new ethers.Contract(contractAddress, abi, provider)
+        let amount = await contract.getWithdrawalAmount(req.body.auction_id, req.body.address)
+        amount = ethers.BigNumber.from(amount).toString().slice(0, -15)
+        
+        res.status(200).json({amount: amount == ''? '0' : amount})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({error: error})
+    }
+})
+
 
 // endpoint to update auction data
 

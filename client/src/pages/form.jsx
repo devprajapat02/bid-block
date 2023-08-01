@@ -134,7 +134,7 @@ const formx = props => {
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
         },
       })} >
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form onSubmit={form.onSubmit(async (values) => handleSubmit(values))}>
         
         <TitleInput form={form} />
         <DescInput form={form} />
