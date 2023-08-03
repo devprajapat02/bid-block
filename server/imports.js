@@ -9,6 +9,7 @@ const dotenv = require('dotenv')
 const bodyparser = require('body-parser')
 const crypto = require('crypto-js')
 const cron = require('node-cron')
+const jwt = require('jsonwebtoken')
 dotenv.config()
 
 // const contractAddress = '0x1dcFA8c9CaE22E5C51542599eE9e1cA9a181Ba76'
@@ -16,6 +17,39 @@ dotenv.config()
 
 const contractAddress = "0x40A66398F6b8758090075a6b2a054dCADeB57a60"
 const network = "https://rpc-mumbai.maticvigil.com/"
+
+const checkAuth = async (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    try {
+        let cookies = {};
+
+        if (!req.headers.cookie) {
+            return res.status(401).json({error : "Authenication failed!"})
+        }
+
+        const cookiesArray = req.headers.cookie.split(';');
+
+        cookiesArray.forEach((cookie) => {
+            const [key, value] = cookie.trim().split('=');
+            cookies[key] = value;
+        });
+
+        req.cookies = cookies;
+        
+        const token = req.cookies.jwt;
+        console.log(`Cookie parsed : ${token}`);
+        if (!token){
+            return res.status(401).json({error : "Authenication failed!"})
+        }
+        const decodedToken = await jwt.verify(token , process.env.SECRET_STR);
+        // req.userData = {userId : decodedToken.userId};
+        req.locals = {user_id: decodedToken.userId};
+        next(); 
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({error : "Authentication failed!"})
+    }
+}
 
 const bidParser = (data) => {
     return {
@@ -65,6 +99,7 @@ module.exports = {
     bodyparser,
     crypto,
     cron,
+    checkAuth,
     auctionParser,
     cronTimer
 }

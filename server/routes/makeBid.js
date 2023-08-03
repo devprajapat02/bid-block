@@ -1,4 +1,5 @@
-const { express, ethers, abi, cors, contractAddress, network} = require('../imports.js')
+const { express, ethers, abi, cors, checkAuth, contractAddress, network, } = require('../imports.js')
+const { connectDB } = require('../database/connect.js')
 const router = express.Router()
 
 router.use(express.json())
@@ -18,7 +19,7 @@ const validateParams = async (req, res, next) => {
     else next()
 }
 
-router.post('/', validateParams, async (req, res) => {
+router.post('/', checkAuth, validateParams, async (req, res) => {
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)
@@ -59,7 +60,27 @@ const verifyTransaction = async (req, res, next) => {
     }
 }
 
-router.post('/mongo', validateParams, verifyTransaction, async (req, res) => {
+const addToDB = async (req, res, next) => {
+    try {
+        await connectDB()
+        const User = require('../database/userSchema.js')
+        const user = await User.findOne({id: req.locals.user_id})
+        user.bid_history.push({
+            bidder: req.body.address,
+            auction_id: req.body.auction_id,
+            bid_value: req.body.bid_value,
+            bid_time: Date.now()
+        })
+    
+        await user.save()
+        next()
+    } catch (error) {
+        console.log("DB error: ", error, req.locals)
+        res.status(400).json({error: error})
+    }
+}
+
+router.post('/mongo', checkAuth, validateParams, verifyTransaction, addToDB, async (req, res) => {
     res.json({
         message: "Bid placed successfully!",
         params: req.body

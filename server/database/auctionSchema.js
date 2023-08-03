@@ -20,6 +20,19 @@ const auctionSechema = new mongoose.Schema({
         type: Array,
         required: true,
     },
+    starting_time: {
+        type: Date,
+        required: true,
+    },
+    end_time: {
+        type: Date,
+        required: true,
+    },
+    highest_bid: {
+        type: Number,
+        default: 0,
+    },
+    
 })
 
 module.exports = mongoose.model('Auction', auctionSechema)

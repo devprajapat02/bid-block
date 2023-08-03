@@ -16,7 +16,7 @@ export default function MakeBid(props) {
       address: account[0],
       auction_id: props.meta.block_data.auction_id
     })
-    setWithdrawal(parseInt(res.data.amount))
+    setWithdrawal(parseInt(res.data.amount)/1000)
   }
 
   useEffect(() => {
@@ -31,9 +31,9 @@ export default function MakeBid(props) {
       let params = {
         address: addresses[0],
         auction_id: props.meta.block_data.auction_id,
-        bid_value: bid
+        bid_value: bid - withdrawal
       }
-      const res = await axios.post("http://localhost:5000/makeBid", params)
+      const res = await axios.post("http://localhost:5000/makeBid", params, {withCredentials: true})
       console.log(res.data)
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -42,7 +42,7 @@ export default function MakeBid(props) {
       const tx = await signer.sendTransaction(res.data.tx)
       await tx.wait()
       params.tx = tx.hash
-      const res2 = await axios.post("http://localhost:5000/makeBid/mongo", params)
+      const res2 = await axios.post("http://localhost:5000/makeBid/mongo", params, {withCredentials: true})
       console.log(res2.data)
     } catch (err) {
       console.log(err)
@@ -55,7 +55,7 @@ export default function MakeBid(props) {
       address: accounts[0],
       auction_id: props.meta.block_data.auction_id
     }
-    const res = await axios.post("http://localhost:5000/withdrawBid", params)
+    const res = await axios.post("http://localhost:5000/withdrawBid", params, {withCredentials: true})
     console.log(res.data.tx)
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner(accounts[0]);
@@ -67,7 +67,7 @@ export default function MakeBid(props) {
     <div style={{marginTop: '5%', marginLeft: '2%'}}>
         <form onSubmit={() => handleFormSubmit()}>
           <div className='row'>
-            <label htmlFor="bid" style={{}}>Bid Amount: {withdrawal/1000} MATIC</label>
+            <label htmlFor="bid" style={{}}>Bid Amount: {withdrawal} MATIC</label>
             <button type='button' disabled={withdrawal == 0} onClick={() => handleWithdraw()}>Withdraw</button>
           </div>
           <label>Make a Bid</label>
@@ -83,7 +83,7 @@ export default function MakeBid(props) {
           <label>MATIC</label>
           <input 
             type="button" 
-            value="Submit"
+            value={`Pay ${(bid - withdrawal).toFixed(1)} MATIC`}
             disabled={bid < min_bid_value}
             onClick={() => {handleFormSubmit()}}
           ></input>

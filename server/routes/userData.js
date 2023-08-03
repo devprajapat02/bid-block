@@ -55,7 +55,7 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
         existingUser = await User.findOne({email:email});
     } catch(error){
         console.log(error)
-        res.status(400).json({error: "There has been a error. Please try again."})
+        res.status(400).json({error: "There has been an error. Please try again."})
     }
 
     if(existingUser){

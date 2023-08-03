@@ -46,7 +46,6 @@ router.get('/getItems/upcoming', async (req, res) => {
             const res = await fetchCentralData(auctions[i])
             if (res) briefs.push(res)
         }
-        console.log("sent briefs")
         res.send(briefs)
     } catch (error) {
         res.send(error)
@@ -61,7 +60,18 @@ router.get('/getItems/live', async (req, res) => {
 
         const page_id = req.query.page_id>=0 ? req.query.page_id : 0
         const auctions = await contract.getLiveIds(page_id)
-        res.send(auctions)
+        if (!req.query.briefs) {
+            res.send(auctions)
+            return
+        }
+
+        let briefs = []
+        for (let i=0; i<auctions.length; i++) {
+            if (auctions[i] == "") continue
+            const res = await fetchCentralData(auctions[i])
+            if (res) briefs.push(res)
+        }
+        res.send(briefs)
     } catch (error) {
         res.send(error)
     }
@@ -75,7 +85,18 @@ router.get('/getItems/past', async (req, res) => {
 
         const page_id = req.query.page_id>=0 ? req.query.page_id : 0
         const auctions = await contract.getPastIds(page_id)
-        res.send(auctions)
+        if (!req.query.briefs) {
+            res.send(auctions)
+            return
+        }
+
+        let briefs = []
+        for (let i=0; i<auctions.length; i++) {
+            if (auctions[i] == "") continue
+            const res = await fetchCentralData(auctions[i])
+            if (res) briefs.push(res)
+        }
+        res.send(briefs)
     } catch (error) {
         res.send(error)
     }
