@@ -26,7 +26,6 @@ function Home(){
         {id: 'u9', title :'car',image:"https://images.boats.com/resize/wp/2/files/2022/12/2023-Pearl-72-Yacht.jpeg",desc:"gguyguy",creatorId:"u2",startingValue:6500},
         {id: 'u10', title :'car',image:"https://images.boats.com/resize/wp/2/files/2022/12/2023-Pearl-72-Yacht.jpeg",desc:"gguyguy",creatorId:"u2",startingValue:6500},
         {id: 'u11', title :'car',image:"https://images.boats.com/resize/wp/2/files/2022/12/2023-Pearl-72-Yacht.jpeg",desc:"gguyguy",creatorId:"u2",startingValue:6500},
-        {id: 'u12', title :'car',image:"https://images.boats.com/resize/wp/2/files/2022/12/2023-Pearl-72-Yacht.jpeg",desc:"gguyguy",creatorId:"u2",startingValue:6500},
             ]
 
     useEffect(() => {
@@ -43,7 +42,7 @@ function Home(){
         { label: 'Past', value: 'past' },
         { label: 'Upcoming', value: 'upcoming' },
       ]}
-      mb={25}
+      mb={30}
       radius={16}
       transitionDuration={500}
       transitionTimingFunction="linear"

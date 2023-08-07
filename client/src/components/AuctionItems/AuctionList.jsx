@@ -29,7 +29,7 @@ const AuctionList = props => {
         }
     }
 
-    return <Grid grow gutter="lg">
+    return <Grid cols={3}>
         {/*<button onClick={ async () => {
             // get address from metamask using ethers
             await window.ethereum.request({ method: 'eth_requestAccounts' });

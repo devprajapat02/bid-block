@@ -40,6 +40,10 @@ function App() {
     }
   }
   
+  useEffect(() => {
+    checkState();
+  }, []);
+  
   let routes;
 
   if(isLoggedIn){
@@ -62,10 +66,6 @@ function App() {
       </Routes>
     )
   }
-
-  useEffect(() => {
-    checkState();
-  }, []);
 
   return (
     <AuthContext.Provider value = {{isLoggedIn : isLoggedIn, login : login, logout : logout}}>
