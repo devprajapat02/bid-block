@@ -55,8 +55,8 @@ contract Auction {
     mapping(string => auction) public auctions;
 
     string[] public auction_ids;
-    uint256 live_count = 0;
-    uint256 past_count = 0;
+    uint256 public live_count = 0;
+    uint256 public past_count = 0;
 
     // constants
     uint256 page_limit = 12;
@@ -118,6 +118,11 @@ contract Auction {
             revert();
         }
 
+        if (msg.sender == auctions[_auction_id].highest_bid.bidder) {
+            emit RevertMessage("You are already the highest bidder");
+            revert();
+        }
+
         uint256 bid_value = msg.value + withdrawals[_auction_id][msg.sender];
 
         if ((auctions[_auction_id].highest_bid.bid_value == 0 && bid_value < auctions[_auction_id].listed_product.base_price) || bid_value < auctions[_auction_id].highest_bid.bid_value) {
@@ -135,7 +140,7 @@ contract Auction {
 
     }
 
-    function withdrawBid (string memory _auction_id) external {
+    function withdrawBid (string memory _auction_id) external payable {
 
         uint256 amount = withdrawals[_auction_id][msg.sender];
         if (auctions[_auction_id].highest_bid.bidder == msg.sender) {
@@ -149,6 +154,7 @@ contract Auction {
         withdrawals[_auction_id][msg.sender] = 0;
         if (!payable(msg.sender).send(amount)) {
             withdrawals[_auction_id][msg.sender] = amount;
+            emit RevertMessage("Withdrawal transaction failed");
         }
     }
 
@@ -158,11 +164,12 @@ contract Auction {
         }
 
         auctions[_auction_id].ended = true;
-        auctions[_auction_id].internal_id = past_count;
         auctions[auction_ids[past_count]].internal_id = auctions[_auction_id].internal_id;
-
         auction_ids[auctions[_auction_id].internal_id] = auction_ids[past_count];
+        
+        auctions[_auction_id].internal_id = past_count;
         auction_ids[past_count] = _auction_id;
+        
         past_count += 1;
         live_count -= 1;
 
@@ -193,7 +200,7 @@ contract Auction {
 
 
     // utility functions
-    function getAuctionDetails (string memory _auction_id) public view returns (auction memory) {
+    function getAuctionDetails (string calldata _auction_id) public view returns (auction memory) {
         
         return auctions[_auction_id];
     }
@@ -241,8 +248,24 @@ contract Auction {
         return _ret;
     }
 
+    function getWithdrawalAmount (string calldata _auction_id, address _bidder) public view returns (uint256) {
+        if (auctions[_auction_id].owner == address(0)) {
+            return 0;
+        }
+
+        return withdrawals[_auction_id][_bidder];
+    }
+
     function getContractBalance () public view returns (uint256) {
         return address(this).balance;
+    }
+
+    function emptyContractBalance () public payable {
+        if (msg.sender != owner) {
+            revert("Unauthorized!");
+        }
+
+        payable(owner).transfer(address(this).balance);
     }
 
     

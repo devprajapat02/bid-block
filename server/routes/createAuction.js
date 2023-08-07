@@ -1,4 +1,4 @@
-const { express, ethers, app, abi, cors, crypto, contractAddress, network, cron, cronTimer, auctionParser} = require('../imports.js')
+const { express, ethers, app, abi, cors, crypto, contractAddress, network, cron, checkAuth, cronTimer, auctionParser} = require('../imports.js')
 const { connectDB } = require('../database/connect')
 const router = express.Router()
 
@@ -111,15 +111,24 @@ const addToContract = async (req, res, next) => {
 const addToDB = async (req, res, next) => {
     try {
         const Auction = require('../database/auctionSchema')
-        
+        const User = require('../database/userSchema')
+        console.log(req.body)
         const auction = new Auction({
             auction_id: req.body.auction_id,
             product_name: req.body.product_name,
             base_price: req.body.base_price,
             description: req.body.description,
-            images: req.body.images.split(", ")
+            images: req.body.images.split(", "),
+            starting_time: new Date(req.body.starting_time),
+            end_time: new Date(req.body.ending_time),
         })
         await auction.save()
+
+        // update user table in mongodb
+        const user = await User.findOne({id: req.userData.userId})
+        user.auctions.push(req.body.auction_id)
+        await user.save()
+
         next()
 
     } catch (error) {
@@ -139,9 +148,9 @@ const verifyTransaction = async (req, res, next) => {
 }
 
 
-router.post("/", validateParams, addToContract)
+router.post("/", checkAuth, validateParams, addToContract)
 
-router.post("/mongo", validateParams, verifyTransaction, connectDB, addToDB, async (req, res) => {
+router.post("/mongo", checkAuth, validateParams, verifyTransaction, connectDB, addToDB, async (req, res) => {
 
     res.status(200).json({
         auction_details: req.body,

@@ -104,7 +104,7 @@ const formx = props => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await provider.listAccounts();
       params.address = accounts[0];
-      const res = await axios.post('http://localhost:5000/createAuction', params);
+      const res = await axios.post('http://localhost:5000/createAuction', params, {withCredentials: true});
       console.log(res.data)
       const signer = provider.getSigner(params.address);
       const tx = await signer.sendTransaction(res.data.tx)
@@ -113,7 +113,7 @@ const formx = props => {
       params.tx = tx.hash
       params.auction_id = res.data.auction_id 
 
-      const res2 = await axios.post('http://localhost:5000/createAuction/mongo', params)
+      const res2 = await axios.post('http://localhost:5000/createAuction/mongo', params, {withCredentials: true})
       console.log(res2.data);
     } catch (error) {
       console.log(error);
@@ -134,7 +134,7 @@ const formx = props => {
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
         },
       })} >
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form onSubmit={form.onSubmit(async (values) => handleSubmit(values))}>
         
         <TitleInput form={form} />
         <DescInput form={form} />

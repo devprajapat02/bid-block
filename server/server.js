@@ -7,7 +7,8 @@
 // const createAuctionRouter = require("./routes/createAuction")
 
 const {express, ethers, abi, cors, fs, mongoose, dotenv, contractAddress, network, bodyparser} = require('./imports')
-const { connectDB } = require('./database/connect')
+const { connectDB } = require('./database/connect');
+const cookieParser = require('cookie-parser')
 const app = express()
 
 app.use(express.json())
@@ -16,6 +17,7 @@ app.use(cors({credentials:true,origin : 'http://localhost:5173'}))
 
 app.use((req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader(
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
@@ -25,6 +27,7 @@ app.use((req,res,next) => {
     next();
 });
 
+
 fs.readdirSync('./routes').forEach((file) => {
     if (file.endsWith('.js')) {
         const route = require(`./routes/${file}`)
@@ -33,7 +36,16 @@ fs.readdirSync('./routes').forEach((file) => {
     }
 })
 
-// {credentials:true,origin : 'http://localhost:5173'}
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors(
+    {
+        credentials: true,
+        origin: 'http://localhost:5173'
+    }
+))
+
 
 app.post("/", async (req, res) => {
 
@@ -56,16 +68,27 @@ app.post("/", async (req, res) => {
     }
 })
 
-app.post('/test', async (req, res) => {
-    try {
-        const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com/")
-        //const signer = await provider.getSigner(req.body.address)
-        const contract = await new ethers.Contract("0x5962360fC2964A68F18ceEAD25faa5c40B6d353b", abi, provider)
 
-        const auctions = await contract.getAuctionIds()
-        res.send(auctions)
+app.use(cookieParser())
+app.get('/test', async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const contract = await new ethers.Contract(contractAddress, abi, provider)
+        const balance = await contract.getContractBalance()
+        res.send(balance.toString())
     } catch (error) {
         res.send(error)
+    }
+})
+
+app.post('/emergencyWithdraw', async (req, res) => {
+    try {
+        const provider = new ethers.providers.JsonRpcProvider(network)
+        const contract = await new ethers.Contract(contractAddress, abi, provider)
+        const tx = await contract.populateTransaction.emptyContractBalance({from: req.body.address})
+        res.status(200).json({tx: tx})
+    } catch (error) {
+        res.json(error)
     }
 })
 

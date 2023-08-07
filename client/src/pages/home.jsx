@@ -6,10 +6,10 @@ import AuctionList from "../components/AuctionItems/AuctionList";
 function Home(){
 
     const [AuctionItems, setAuctionItems] = useState([])
-    const [value, setValue] = useState('ongoing');
+    const [auctionStage, setAuctionStage] = useState('live');
 
     const fetchAuctions = async () => {
-        const res = await axios.get("http://localhost:5000/auctionData/getItems/upcoming?briefs=true")
+        const res = await axios.get(`http://localhost:5000/auctionData/getItems/${auctionStage}?briefs=true`)
         setAuctionItems(res.data)
         console.log(res.data)
     }
@@ -30,16 +30,16 @@ function Home(){
 
     useEffect(() => {
         fetchAuctions()
-    }, [value])
+    }, [auctionStage])
   
     return (
     <>
     <SegmentedControl
-      value={value}
-      onChange={setValue}
+      value={auctionStage}
+      onChange={setAuctionStage}
       data={[
-        { label: 'Ongoing', value: 'ongoing' },
         { label: 'Past', value: 'past' },
+        { label: 'Live', value: 'live' },
         { label: 'Upcoming', value: 'upcoming' },
       ]}
       mb={30}

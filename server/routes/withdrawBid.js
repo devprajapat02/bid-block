@@ -22,8 +22,11 @@ router.post('/', validateParams, async (req, res) => {
         const signer = await provider.getSigner(req.body.address)
         const contract = await new ethers.Contract(contractAddress, abi, signer)
 
-        contract.withdrawBid(req.body.auction_id, {from: req.body.address})
-        res.status(200).json({message: "Bid withdrawn"})
+        const tx = await contract.populateTransaction.withdrawBid(req.body.auction_id, {from: req.body.address})
+        res.status(200).json({
+            message: "Bid withdrawing",
+            tx: tx
+        })
     } catch (error) {
         res.status(400).json({error: error})
     }
