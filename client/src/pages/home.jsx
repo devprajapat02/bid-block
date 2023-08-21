@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { SegmentedControl } from '@mantine/core';
+import { SegmentedControl,Loader } from '@mantine/core';
 import axios from "axios";
+import Card from "../components/UIElements/Card";
 import AuctionList from "../components/AuctionItems/AuctionList";
 
 function Home(){
 
     const [AuctionItems, setAuctionItems] = useState([])
     const [auctionStage, setAuctionStage] = useState('live');
+    const [loader,isLoader] = useState(true);
 
     const fetchAuctions = async () => {
+
         const res = await axios.get(`http://localhost:5000/auctionData/getItems/${auctionStage}?briefs=true`)
         setAuctionItems(res.data)
+        isLoader(false);
         console.log(res.data)
     }
 
@@ -29,6 +33,7 @@ function Home(){
             ]
 
     useEffect(() => {
+        isLoader(true);
         fetchAuctions()
     }, [auctionStage])
   
@@ -48,7 +53,10 @@ function Home(){
       transitionTimingFunction="linear"
       size="md"
     />
-    <AuctionList items={AuctionItems} />
+    {!loader && <AuctionList items={AuctionItems} />}
+    {loader && <div className="place-list center" style={{background: "#4d4d4d",marginTop:"40px"}}>
+                  <Loader variant="bars" color="white" sz="xl" />
+                </div>}
     </>
   );
 }

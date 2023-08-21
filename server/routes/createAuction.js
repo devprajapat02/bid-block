@@ -125,7 +125,7 @@ const addToDB = async (req, res, next) => {
         await auction.save()
 
         // update user table in mongodb
-        const user = await User.findOne({id: req.userData.userId})
+        const user = await User.findOne({id: req.locals.user_id})
         user.auctions.push(req.body.auction_id)
         await user.save()
 

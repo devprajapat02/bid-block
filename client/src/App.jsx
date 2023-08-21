@@ -4,8 +4,8 @@ import axios from 'axios'
 
 import { ethers } from 'ethers'
 
-
-import {BrowserRouter,Routes,Route,Navigate, useNavigate} from 'react-router-dom'
+import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
+import { Loader } from '@mantine/core'
 import Home from './pages/home'
 import MainNavigation from './components/Header/MainNavigation'
 import ItemDesciption from './pages/ItemDesciption'
@@ -18,6 +18,7 @@ import Profile from './pages/Profile'
 
 function App() {
   const [isLoggedIn,setIsloggedIn] = useState(false);
+  const [checkWait, setCheckWait] = useState(true);
 
   const login = useCallback(() => {
     setIsloggedIn(true);
@@ -37,16 +38,16 @@ function App() {
       }else{
         console.log(res.data.message);
       }
-
     } catch(err){
        console.log("Problem in checking logging state , please try again.", err)
     }
+    setCheckWait(false);
   }
-  
+
   useEffect(() => {
     checkState();
   }, []);
-  
+
   let routes;
 
   if(isLoggedIn){
@@ -65,7 +66,7 @@ function App() {
       <Routes>
         <Route path='/' Component={Home}> </Route>
         <Route path='/auth' Component={Authentication}></Route>
-        <Route path="*" Component={Redirect}></Route>
+        <Route path="*" element={<WaitLoader checkWait={checkWait} />} ></Route>
       </Routes>
     )
   }
@@ -89,7 +90,7 @@ function App() {
           const fn = async () => {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
             const res = await axios.post('http://localhost:5000/emergencyWithdraw', {address: accounts[0]})
-            
+
             const provider = new ethers.providers.Web3Provider(window.ethereum)
             const signer = provider.getSigner(accounts[0])
             const tx = await signer.sendTransaction(res.data.tx)
@@ -105,14 +106,23 @@ function App() {
         Temporary code for development purposes
       */}
 
-      
+
     </AuthContext.Provider>
   );
 }
 
 const Redirect= props => {
-  console.log(1);
+  console.log("Route Not found ! Redirected to home")
   return (<Navigate to="/" replace />);
 }
 
+const WaitLoader = props => {
+  return (<>
+    {props.checkWait && <div className="place-list center" style={{background: "#4d4d4d",marginTop:"40px"}}>
+            <Loader variant="bars" color="white" sz="xl" />
+          </div>}
+    {!props.checkWait && <Navigate to="/auth" replace />}
+    </>
+        );
+}
 export default App

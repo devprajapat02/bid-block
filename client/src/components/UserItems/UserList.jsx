@@ -1,7 +1,7 @@
 import React from "react";
 
 import Card from '../UIElements/Card';
-import { Grid } from '@mantine/core';
+import { Grid , Loader} from '@mantine/core';
 import axios from 'axios';
 import LiveItem from "./LiveItem";
 import PastItem from "./PastItem";
@@ -13,8 +13,9 @@ const UserList = props => {
             <div className="place-list center">
                 <Card>
                     <h2>No item found</h2>
+                    <button>Auction Item</button>
                 </Card>
-            </div>
+            </div>      
         )
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useToggle, upperFirst } from '@mantine/hooks';
+import { useToggle, upperFirst} from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -12,17 +12,19 @@ import {
   Checkbox,
   Anchor,
   Stack,
+  LoadingOverlay,
 } from '@mantine/core';
 
 import { GoogleButton,TwitterButton } from "../components/Authentication/SocialButtons";
 import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
+import { useContext,useState } from 'react';
 import axios from 'axios';
 
 const Authentication  = props => {
   const Auth = useContext(AuthContext);
 
   const [type, toggle] = useToggle(['login', 'register']);
+  const [visible, setVisible ] = useState(false);
   const form = useForm({
     initialValues: {
       email: '',
@@ -38,6 +40,7 @@ const Authentication  = props => {
   });
 
   async function onSubmithandler(props){
+    setVisible(true);
     console.log(props)
     if(type === "login"){
       try{
@@ -75,10 +78,13 @@ const Authentication  = props => {
     }else{
         console.log("Error : Check Authentication System")
     }
+    setVisible(false);
   }
 
   return (
-        <Paper radius="md" p="xl" withBorder {...props} maw={415} mr="auto" ml="auto" my={120}>
+    <>
+        <Paper radius="md" p="xl" withBorder {...props} maw={415} mr="auto" ml="auto" my={120} pos="relative">
+          <LoadingOverlay visible={visible} overlayBlur={2} />
           <Text size="lg" weight={500}>
             Welcome to Bid-Block, {type} with
           </Text>
@@ -136,7 +142,9 @@ const Authentication  = props => {
                 component="button"
                 type="button"
                 color="dimmed"
-                onClick={() => toggle()}
+                onClick={() => {
+                  toggle();
+                }}
                 size="xs"
               >
                 {type === 'register'
@@ -149,6 +157,7 @@ const Authentication  = props => {
             </Group>
           </form>
         </Paper>
+    </>
   )
 }
 export default Authentication ;
