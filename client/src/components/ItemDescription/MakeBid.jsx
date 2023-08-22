@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ethers } from 'ethers'
 import '../../css/ItemDescription/Sections.css'
 import post from '../../utils/post'
+import { toast } from 'react-toastify'
 
 export default function MakeBid(props) {
   
@@ -53,12 +54,15 @@ export default function MakeBid(props) {
       address: accounts[0],
       auction_id: props.meta.block_data.auction_id
     }
-    const res = await axios.post("http://localhost:5000/withdrawBid", params, {withCredentials: true})
-    console.log(res.data.tx)
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner(accounts[0]);
-    const tx = await signer.sendTransaction(res.data.tx)
-    await tx.wait()
+
+    const res = await post("http://localhost:5000/withdrawBid", params, true, true)
+    if (res.status === 201) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(accounts[0]);
+      const tx = await signer.sendTransaction(res.data.tx)
+      await tx.wait()
+      toast.success('Bid Withdrawn')
+    }
   }
 
   return (

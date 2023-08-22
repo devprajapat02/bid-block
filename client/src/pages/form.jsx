@@ -98,28 +98,24 @@ const formx = props => {
   });
 
   const handleSubmit = async (values) => {
-    try {
-      let params = values
-      
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const accounts = await provider.listAccounts();
-      params.address = accounts[0];
-    } catch (error) {
-      console.log(error);
+    let params = values
+    
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const accounts = await provider.listAccounts();
+    params.address = accounts[0];
+
+    const res = await post('http://localhost:5000/createAuction', params, true, false)
+    if (res.status === 200) {
+      const signer = provider.getSigner(params.address);
+      const tx = await signer.sendTransaction(res.data.tx)
+      await tx.wait()
+      console.log(tx)
+      params.tx = tx.hash
+      params.auction_id = res.data.auction_id 
+
+      await post('http://localhost:5000/createAuction/mongo', params, true, true)
     }
-
-      const res = await post('http://localhost:5000/createAuction', params, true, false)
-      if (res.status === 200) {
-        const signer = provider.getSigner(params.address);
-        const tx = await signer.sendTransaction(res.data.tx)
-        await tx.wait()
-        console.log(tx)
-        params.tx = tx.hash
-        params.auction_id = res.data.auction_id 
-
-        await post('http://localhost:5000/createAuction/mongo', params, true, true)
-      }
   }
 
   return (

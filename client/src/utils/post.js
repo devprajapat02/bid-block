@@ -11,8 +11,8 @@ const post = async (uri, params, creds, notif) => {
         console.log(res.data)
         return res
     } catch (err) {
-        if (notif) toast.error(err.response.data.error)
         console.log(err)
+        if (notif && err.response.data.error) toast.error(err.response.data.error)
         return err.response
     }
     
