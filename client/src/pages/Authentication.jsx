@@ -19,6 +19,7 @@ import { GoogleButton,TwitterButton } from "../components/Authentication/SocialB
 import { AuthContext } from '../context/AuthContext';
 import { useContext,useState } from 'react';
 import axios from 'axios';
+import post from '../utils/post';
 
 const Authentication  = props => {
   const Auth = useContext(AuthContext);
@@ -43,36 +44,17 @@ const Authentication  = props => {
     setVisible(true);
     console.log(props)
     if(type === "login"){
-      try{
 
-        const res = await axios.post('http://localhost:5000/userData/login', props, {withCredentials:true});
-        console.log(res);
-        if(res.status === 200){
-          console.log("Successfully logged In!")
-          Auth.login();
-        }else{
-          console.log(res.data.error);
-        }
-
-      } catch(err){
-         console.log("Problem in login , please try again.", err)
+      const res = await post('http://localhost:5000/userData/login', props, true, true);
+      if (res.status === 200) {
+        Auth.login();
       }
 
     } else if (type === "register"){
 
-      try{
-
-        const res = await axios.post('http://localhost:5000/userData/signup',props,{withCredentials:true});
-        console.log(res);
-        if(res.status === 200){
-          console.log("Successfully registered!")
-          Auth.login();
-        }else{
-          console.log(res.data.error);
-        }
-
-      } catch (err) {
-        console.log("Problem in registeration , please try again.",err)
+      const res = await post('http://localhost:5000/userData/signup', props, true, true)
+      if (res.status === 200) {
+        Auth.login();
       }
 
     }else{

@@ -4,8 +4,12 @@ import axios from 'axios'
 
 import { ethers } from 'ethers'
 
-import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
+
 import { Loader } from '@mantine/core'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
 import Home from './pages/home'
 import MainNavigation from './components/Header/MainNavigation'
 import ItemDesciption from './pages/ItemDesciption'
@@ -107,6 +111,12 @@ function App() {
       */}
 
 
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={true}
+      />
+      
     </AuthContext.Provider>
   );
 }

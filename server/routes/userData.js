@@ -176,7 +176,7 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
         } catch(error) {
             return res.status(400).json({error:"Login failed, please try again."})
         }
-        res.status(200).json({userId : existingUser.id ,email : existingUser.email ,token : token});
+        res.status(200).json({userId : existingUser.id ,email : existingUser.email ,token : token, message: "Login Successful"});
     }else{
         res.status(400).json({error : "Your credentials are incorrect, please try again with correct credentials."});
     }

@@ -4,6 +4,7 @@ import { DateInput, TimeInput, DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import axios from 'axios';
 import { ethers } from 'ethers';
+import post from '../utils/post'
 
 const TitleInput = props => {
     return <TextInput
@@ -104,20 +105,21 @@ const formx = props => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await provider.listAccounts();
       params.address = accounts[0];
-      const res = await axios.post('http://localhost:5000/createAuction', params, {withCredentials: true});
-      console.log(res.data)
-      const signer = provider.getSigner(params.address);
-      const tx = await signer.sendTransaction(res.data.tx)
-      await tx.wait()
-      console.log(tx)
-      params.tx = tx.hash
-      params.auction_id = res.data.auction_id 
-
-      const res2 = await axios.post('http://localhost:5000/createAuction/mongo', params, {withCredentials: true})
-      console.log(res2.data);
     } catch (error) {
       console.log(error);
     }
+
+      const res = await post('http://localhost:5000/createAuction', params, true, false)
+      if (res.status === 200) {
+        const signer = provider.getSigner(params.address);
+        const tx = await signer.sendTransaction(res.data.tx)
+        await tx.wait()
+        console.log(tx)
+        params.tx = tx.hash
+        params.auction_id = res.data.auction_id 
+
+        await post('http://localhost:5000/createAuction/mongo', params, true, true)
+      }
   }
 
   return (

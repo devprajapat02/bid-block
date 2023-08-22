@@ -4,23 +4,16 @@ import "../../css/Header/Navlinks.css";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { Button } from "@mantine/core";
+import post from "../../utils/post";
 
 const Navlinks = props =>{
     const auth = useContext(AuthContext);
     
     async function logoutHandler(){
-        try{
-            const res = await axios.post('http://localhost:5000/userData/logout', {}, {withCredentials:true});
-            console.log(res);
-            if(res.status === 200){
-                console.log("Successfully logged out!")
-                auth.logout()
-            }else{
-              console.log(res.data.error);
-            }
-    
-          } catch(err){
-             console.log("Problem in logout , please try again.", err)
+
+        const res = await post('http://localhost:5000/userData/logout', {}, true, true);
+        if (res.status === 200) {
+            auth.logout()
         }
     }
 
