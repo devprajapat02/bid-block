@@ -118,7 +118,7 @@ const Redirect= props => {
 
 const WaitLoader = props => {
   return (<>
-    {props.checkWait && <div className="place-list center" style={{background: "#4d4d4d",marginTop:"40px"}}>
+          {props.checkWait && <div className="place-list center" style={{background: "#4d4d4d",marginTop:"40px"}}>
             <Loader variant="bars" color="white" sz="xl" />
           </div>}
     {!props.checkWait && <Navigate to="/auth" replace />}

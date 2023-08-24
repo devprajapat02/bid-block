@@ -1,0 +1,8 @@
+.hover-item {
+    transition: 0.3s;
+  }
+  .hover-item:hover {
+    transform: translate(0, -2px);
+    background: rgb(235, 235, 235);
+    cursor: pointer;
+  }

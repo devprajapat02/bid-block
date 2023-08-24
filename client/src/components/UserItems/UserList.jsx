@@ -19,17 +19,6 @@ const UserList = props => {
         )
     }
 
-    const addToDB = async (params) => {
-        try {
-            console.log(params)
-            const res2 = await axios.post('http://localhost:5000/createAuction/mongo', params)
-            console.log(res2.data);
-        } catch (e) {
-            console.log(e);
-            console.log(params.tx)
-        }
-    }
-
     return <Grid >
         
         {props.items.map((item, id) => {
