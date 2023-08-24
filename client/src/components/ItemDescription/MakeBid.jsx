@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { ethers } from 'ethers'
 import '../../css/ItemDescription/Sections.css'
-
+import post from '../../utils/post'
+import { toast } from 'react-toastify'
 
 export default function MakeBid(props) {
   
@@ -25,28 +26,26 @@ export default function MakeBid(props) {
 
   const handleFormSubmit = async () => {
     // e.preventDefault()
-    console.log(bid)
-    try {
-      const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' })
-      let params = {
-        address: addresses[0],
-        auction_id: props.meta.block_data.auction_id,
-        bid_value: bid - withdrawal
-      }
-      const res = await axios.post("http://localhost:5000/makeBid", params, {withCredentials: true})
-      console.log(res.data)
 
+    const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    let params = {
+      address: addresses[0],
+      auction_id: props.meta.block_data.auction_id,
+      bid_value: bid - withdrawal
+    }
+
+    const res = await post("http://localhost:5000/makeBid", params, true, false)
+    
+    if (res.status === 200) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner(params.address);
       res.data.tx.value = res.data.tx.value.hex
       const tx = await signer.sendTransaction(res.data.tx)
       await tx.wait()
       params.tx = tx.hash
-      const res2 = await axios.post("http://localhost:5000/makeBid/mongo", params, {withCredentials: true})
-      console.log(res2.data)
-    } catch (err) {
-      console.log(err)
+      await post("http://localhost:5000/makeBid/mongo", params, true, true)
     }
+
   }
 
   const handleWithdraw = async () => {
@@ -55,12 +54,15 @@ export default function MakeBid(props) {
       address: accounts[0],
       auction_id: props.meta.block_data.auction_id
     }
-    const res = await axios.post("http://localhost:5000/withdrawBid", params, {withCredentials: true})
-    console.log(res.data.tx)
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner(accounts[0]);
-    const tx = await signer.sendTransaction(res.data.tx)
-    await tx.wait()
+
+    const res = await post("http://localhost:5000/withdrawBid", params, true, true)
+    if (res.status === 201) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(accounts[0]);
+      const tx = await signer.sendTransaction(res.data.tx)
+      await tx.wait()
+      toast.success('Bid Withdrawn')
+    }
   }
 
   return (

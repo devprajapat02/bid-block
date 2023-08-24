@@ -17,14 +17,15 @@ const validateParams = (req, res, next) => {
 }
 
 router.post('/', validateParams, async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)
         const contract = await new ethers.Contract(contractAddress, abi, signer)
 
         const tx = await contract.populateTransaction.withdrawBid(req.body.auction_id, {from: req.body.address})
-        res.status(200).json({
-            message: "Bid withdrawing",
+        res.status(201).json({
+            message: "Withdrawing bid",
             tx: tx
         })
     } catch (error) {
