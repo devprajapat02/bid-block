@@ -3,6 +3,7 @@ import '../../css/ItemDescription/Sections.css'
 import Details from './Details'
 import BidHistory from './BidHistory'
 import MakeBid from './MakeBid'
+import { toast } from 'react-toastify'
 
 export default function Sections(props) {
 
@@ -23,7 +24,12 @@ export default function Sections(props) {
             <div className='col clk' onClick={() => {setActive('bid_history')}} style={{borderLeft: '1px solid grey', borderRight: '1px solid grey'}}>
                 Bid History
             </div>
-            <div className='col clk' onClick={() => {setActive('make_a_bid')}}>
+            <div className='col clk' onClick={() => {
+                if(props.meta.block_data.ended) {
+                    toast.info("Auction has ended")
+                } else {
+                    setActive('make_a_bid')}}
+                }>
                 Make a Bid
             </div>
             
