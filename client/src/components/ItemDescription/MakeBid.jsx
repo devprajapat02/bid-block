@@ -65,12 +65,16 @@ export default function MakeBid(props) {
     }
   }
 
+  const buttonStyle = {all: "unset", margin: '20px', padding: '10px', borderRadius: '5%', cursor: withdrawal == 0? 'not-allowed': 'pointer', backgroundColor: 'rgb(200, 50, 100)'}
+
   return (
-    <div style={{marginTop: '5%', marginLeft: '2%'}}>
+    <div style={{paddingTop: '4%', marginLeft: 'auto', marginRight: 'auto'}}>
         <form onSubmit={() => handleFormSubmit()}>
-          <div className='row'>
-            <label htmlFor="bid" style={{}}>Bid Amount: {withdrawal} MATIC</label>
-            <button type='button' disabled={withdrawal == 0} onClick={() => handleWithdraw()}>Withdraw</button>
+          <div className=''>
+            <label htmlFor="bid" style={{padding: '10px', backgroundColor: 'rgb(20, 20, 20)'}}>Invested:</label>
+            <label htmlFor='bid' style={{padding: '10px', backgroundColor: 'rgb(40, 40, 40)'}}>{withdrawal} MATIC</label>
+            <button type='button' style={buttonStyle}
+             disabled={withdrawal == 0} onClick={() => handleWithdraw()}>Withdraw</button>
           </div>
           <label>Make a Bid</label>
           <input 
@@ -80,14 +84,15 @@ export default function MakeBid(props) {
             onChange={(e) => {setBid(e.target.value)}}
             min={min_bid_value}
             placeholder="Enter Bid Amount" 
-            style={{all: "unset", margin: '20px'}}
+            style={{all: "unset", padding: '10px 0 10px 10px', margin: '20px 0 20px 20px', backgroundColor: 'rgb(40, 40, 40)', borderRadius: '5%'}}
           ></input>
-          <label>MATIC</label>
+          <label style={{padding: '10px', backgroundColor: 'rgb(20, 20, 20)'}}>MATIC</label>  
           <input 
             type="button" 
             value={`Pay ${(bid - withdrawal).toFixed(1)} MATIC`}
             disabled={bid < min_bid_value}
             onClick={() => {handleFormSubmit()}}
+            style={{all: "unset", margin: '20px', padding: '10px', cursor: 'pointer', backgroundColor: 'rgb(20, 100, 200)'}}
           ></input>
         </form>
     </div>

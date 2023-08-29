@@ -1,8 +1,8 @@
-const { express, ethers, app, abi, cors, contractAddress, network} = require('../imports.js')
+const { express, ethers, app, abi, cors, checkAuth, contractAddress, network} = require('../imports.js')
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const checkAuth = require('../check-auth.js') 
+// const checkAuth = require('../check-auth.js') 
 const cookieParser = require('cookie-parser')
 const Auction = require('../database/auctionSchema.js')
 const { connectDB } = require('../database/connect.js');
@@ -195,7 +195,7 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
 })
 
 router.post('/id', checkAuth , connectDB , async (req , res, next ) => {
-    const id = req.cookies.userId;
+    const id = req.locals.user_id;
     console.log("userId :" + id);
     try {
         const User = require('../database/userSchema.js')

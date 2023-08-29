@@ -14,7 +14,7 @@ export default function ImageDescription(props) {
 
     const ImageViewer = () => {
 
-        let img_src = props.meta.profile_image? props.meta.profile_image: `data:image/png;base64,${new identicon(stringToHex(props.meta.username), 250).toString()}`
+        let img_src = props.meta.profile_image? props.meta.profile_image: `data:image/png;base64,${new identicon(stringToHex(props.meta.id), 250).toString()}`
 
         return (
             <div className='img_container' style={{position: 'relative', flex: '0.6', margin: '2% 0% 2% 2%'}}>
@@ -29,21 +29,21 @@ export default function ImageDescription(props) {
                 {ImageViewer()}
             <div className='col'>
                 <div className='row item-title' style={{fontSize: '40px', fontWeight: 'bolder', marginTop: '2%'}}>
-                    {props.meta.name}
+                    {props.meta.Name}
                 </div>
-                <div className='row item-title' style={{fontSize: '15px', color: 'grey'}}>
-                    ID: {props.meta.username}
+                <div className='row item-title' style={{fontSize: '15px', color: 'grey', marginTop: '1%'}}>
+                    ID: {props.meta.id}
                 </div>
                 <hr style={{width: '90%', marginTop: '5%', border: '1px solid rgb(50, 50, 50)'}} />
                 <div className='row item-title' style={{fontSize: '20px', fontWeight: 'bold', marginTop: '5%'}}>
                     {props.meta.email}
                 </div>
-                <div className='row item-title' style={{fontSize: '15px'}}>
+                {/* <div className='row item-title' style={{fontSize: '15px'}}>
                     {props.meta.address.local}, {props.meta.address.city}, ({props.meta.address.zip})
                 </div>
                 <div className='row item-title' style={{fontSize: '15px'}}>
                     {props.meta.address.state}, {props.meta.address.country}
-                </div>
+                </div> */}
             </div>
         </div>
     </>

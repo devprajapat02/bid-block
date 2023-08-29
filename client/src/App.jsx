@@ -114,7 +114,6 @@ function App() {
       <ToastContainer
         position='bottom-right'
         autoClose={3000}
-        hideProgressBar={true}
       />
       
     </AuthContext.Provider>

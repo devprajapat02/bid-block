@@ -1,0 +1,14 @@
+.skeleton {
+    animation: skeleton-loading 1s linear infinite alternate;
+    color: transparent
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: rgb(40, 40, 40);
+    }
+
+    100% {
+        background-color: rgb(30, 30, 30);
+    }
+}
