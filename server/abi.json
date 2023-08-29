@@ -1,5 +1,18 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			}
+		],
+		"name": "approveProduct",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -91,6 +104,72 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_product_name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_base_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_starting_time",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_auction_time",
+				"type": "uint256"
+			}
+		],
+		"name": "createAuction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emptyContractBalance",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			}
+		],
+		"name": "endAuction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			}
+		],
+		"name": "makeBid",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -111,9 +190,22 @@
 				"type": "string"
 			}
 		],
-		"name": "approveProduct",
+		"name": "startAuction",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_auction_id",
+				"type": "string"
+			}
+		],
+		"name": "withdrawBid",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -234,59 +326,6 @@
 				"internalType": "string",
 				"name": "_auction_id",
 				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_product_name",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_base_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_starting_time",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_auction_time",
-				"type": "uint256"
-			}
-		],
-		"name": "createAuction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "emptyContractBalance",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_auction_id",
-				"type": "string"
-			}
-		],
-		"name": "endAuction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_auction_id",
-				"type": "string"
 			}
 		],
 		"name": "getAuctionDetails",
@@ -388,6 +427,11 @@
 						"internalType": "struct Auction.bid[]",
 						"name": "bids",
 						"type": "tuple[]"
+					},
+					{
+						"internalType": "address payable[]",
+						"name": "bidders",
+						"type": "address[]"
 					},
 					{
 						"internalType": "bool",
@@ -524,19 +568,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_auction_id",
-				"type": "string"
-			}
-		],
-		"name": "makeBid",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "past_count",
 		"outputs": [
@@ -547,32 +578,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_auction_id",
-				"type": "string"
-			}
-		],
-		"name": "startAuction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_auction_id",
-				"type": "string"
-			}
-		],
-		"name": "withdrawBid",
-		"outputs": [],
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{

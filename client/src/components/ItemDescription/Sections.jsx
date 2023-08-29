@@ -25,8 +25,8 @@ export default function Sections(props) {
                 Bid History
             </div>
             <div className='col clk' onClick={() => {
-                if(props.meta.block_data.ended) {
-                    toast.info("Auction has ended")
+                if (!props.meta.block_data.started) {
+                    toast.info("Auction has not started")
                 } else {
                     setActive('make_a_bid')}}
                 }>

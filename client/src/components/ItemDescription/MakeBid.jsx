@@ -10,14 +10,17 @@ export default function MakeBid(props) {
   const min_bid_value = props.meta.block_data.highest_bid.bid_amount == ''? parseInt(props.meta.block_data.base_price)/1000 : parseInt(props.meta.block_data.highest_bid.bid_amount)/1000
   const [bid, setBid] = useState(min_bid_value)
   const [withdrawal, setWithdrawal] = useState(0)
+  const [loader, setLoader] = useState(true)
   
   const fetchAccount = async () => {
+    setLoader(true)
     const account = await window.ethereum.request({ method: 'eth_requestAccounts' });
     const res = await axios.post("http://localhost:5000/auctionData/getWithdrawalAmount", {
       address: account[0],
       auction_id: props.meta.block_data.auction_id
     })
     setWithdrawal(parseInt(res.data.amount)/1000)
+    setLoader(false)
   }
 
   useEffect(() => {
@@ -27,6 +30,14 @@ export default function MakeBid(props) {
   const handleFormSubmit = async () => {
     // e.preventDefault()
 
+    if (props.meta.block_data.ended) {
+      toast.info("Auction has ended")
+      return
+    }
+
+    if (withdrawal == 0) {
+      await fetchAccount()
+    }
     const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' })
     let params = {
       address: addresses[0],
@@ -66,6 +77,7 @@ export default function MakeBid(props) {
   }
 
   const buttonStyle = {all: "unset", margin: '20px', padding: '10px', borderRadius: '5%', cursor: withdrawal == 0? 'not-allowed': 'pointer', backgroundColor: 'rgb(200, 50, 100)'}
+  const submitStyle = {all: "unset", margin: '20px', padding: '10px', cursor: loader? 'not-allowed': 'pointer', backgroundColor: 'rgb(20, 100, 200)'}
 
   return (
     <div style={{paddingTop: '4%', marginLeft: 'auto', marginRight: 'auto'}}>
@@ -90,9 +102,9 @@ export default function MakeBid(props) {
           <input 
             type="button" 
             value={`Pay ${(bid - withdrawal).toFixed(1)} MATIC`}
-            disabled={bid < min_bid_value}
+            disabled={bid < min_bid_value || loader}
             onClick={() => {handleFormSubmit()}}
-            style={{all: "unset", margin: '20px', padding: '10px', cursor: 'pointer', backgroundColor: 'rgb(20, 100, 200)'}}
+            style={submitStyle}
           ></input>
         </form>
     </div>

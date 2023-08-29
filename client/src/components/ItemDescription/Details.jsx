@@ -21,7 +21,7 @@ export default function Details(props) {
         Started: {props.meta.block_data.start_time}
         </div>
         <div className='col'>
-        Ends: {props.meta.block_data.auction_time}
+        Ends: {new Date(parseInt(props.meta.block_data.auction_time)*1000).toDateString()}
         </div>
         <div className='col'>
         Time Left: {props.meta.block_data.start_time}
