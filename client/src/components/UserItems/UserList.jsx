@@ -1,13 +1,13 @@
 import React from "react";
 
 import Card from '../UIElements/Card';
-import { Grid , Loader} from '@mantine/core';
-import axios from 'axios';
+import { Grid } from '@mantine/core';
 import LiveItem from "./LiveItem";
 import PastItem from "./PastItem";
 import FutureItem from "./FutureItem";
 
 const UserList = props => {
+    console.log(props)
     if(props.items.length === 0){
         return (
             <div className="place-list center">
@@ -26,7 +26,7 @@ const UserList = props => {
                 return <LiveItem
                 key = {id}
                 auction_id = {item.auction_id}
-                image ={item.image}
+                image ={item.images[0]}
                 title = {item.product_name}
                 desc= {item.description}
                 startingValue={item.base_price/1000}
@@ -35,19 +35,21 @@ const UserList = props => {
                 return <PastItem
                 key = {id}
                 auction_id = {item.auction_id}
-                image ={item.image}
+                image ={item.images[0]}
                 title = {item.product_name}
                 desc= {item.description}
                 startingValue={item.base_price/1000}
+                highest_bid={item.highest_bid/1000}
                 />
             }else if(props.type === 'upcoming'){
                 return <FutureItem
                 key = {id}
                 auction_id = {item.auction_id}
-                image ={item.image}
+                image ={item.images[0]}
                 title = {item.product_name}
                 desc= {item.description}
                 startingValue={item.base_price/1000}
+                starting_time={item.starting_time}
                 />
             }
             

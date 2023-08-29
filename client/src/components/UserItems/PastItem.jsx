@@ -2,12 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Card, Image, Text, Badge, Button, Group, Stack } from '@mantine/core';
 
-export default function PastItem() {
+const PastItem = props => {
 
   const navigate = useNavigate();
 
-  const Redirect = props => {
-    navigate("/");
+  const Redirect = () => {
+    navigate(`/item/${props.auction_id}`);
   }
 
   return (
@@ -15,7 +15,7 @@ export default function PastItem() {
     <Card onClick={Redirect} mr="auto" ml="auto" shadow="sm" className='hover-item' padding="lg" radius="lg" mb={13} withBorder style={{height:166,width:900}}>
       <Group position="apart">
           <Image
-            src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
+            src={props.image}
             height={160}
             width={160}
             ml={-18}
@@ -26,18 +26,27 @@ export default function PastItem() {
           />
 
           <Stack style={{width:400}}>
-            <Text weight={500} c="blue" fz="lg">Norway Fjord Adventures</Text>
+            <Text weight={500} c="blue" fz="lg">{props.title}</Text>
             <Text size="sm" color="dimmed" truncate >
-              With Fjord Tours you can explore more of the magical jiihigigigihfuyguyfuyuffuyuhhhhhhhh
+              {props.desc}
             </Text>
           </Stack>
-          
+          {props.highest_bid>0 && 
           <Badge color="green" size='lg'>
-            Base Price : 500
+            Sold : {props.highest_bid}
           </Badge >
+          }
+          {
+            props.highest_bid==0 && 
+            <Badge color="red" size='lg'>
+              Unsold
+            </Badge >
+          }
 
       </Group>
     </Card>
     </>
   );
 }
+
+export default PastItem;

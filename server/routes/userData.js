@@ -74,10 +74,21 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
     let id;
     try {
         const User = require("../database/userSchema.js")
+        // const Address = require("../database/userSchema.js")
+        // const newAddress = new Address()
+        console.log(req.body)
         const newUser = new User({
             Name: name,
             id : uuidv4(),
             email : email,
+            profileImage: req.body.image,
+            address : {
+                local : req.body.address,
+                pincode : req.body.pinCode,
+                country : req.body.country,
+                state : req.body.state,
+                city : req.body.city
+            }, 
             passwordHash : hashedPassword,
         });
         
@@ -96,18 +107,18 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
         token = jwt.sign(
             {userId : id ,email : email},
             process.env.SECRET_STR,
-            {expiresIn:"1h"}
+            {expiresIn:"24h"}
         );
         
         res.cookie('jwt',token,{
             httpOnly: true,
             withCredentials : true,
-            maxAge: 1000 * 60 * 60
+            maxAge: 24000 * 60 * 60
         }) 
         res.cookie('userId',id,{
             httpOnly: trusted,
             withCredentials : true,
-            maxAge: 1000 * 60 * 60
+            maxAge: 24000 * 60 * 60
         }) 
 
         return res.status(200).json({message : "You are successfully registered!",
@@ -160,18 +171,18 @@ router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
             token = jwt.sign(
                 {userId : existingUser.id, email : existingUser.email},
                 process.env.SECRET_STR,
-                {expiresIn : "1h"}
+                {expiresIn : "24h"}
             );
 
             res.cookie('jwt',token,{
                 httpOnly: true,
                 withCredentials : true,
-                maxAge: 1000 * 60 * 60
+                maxAge: 24000 * 60 * 60
             })
             res.cookie('userId',existingUser.id,{
                 httpOnly: true,
                 withCredentials : true,
-                maxAge: 1000 * 60 * 60
+                maxAge: 24000 * 60 * 60
             })        
         } catch(error) {
             return res.status(400).json({error:"Login failed, please try again."})
@@ -234,6 +245,21 @@ router.post('/verify', async (req, res, next) => {
         return res.status(200).json({message : "Logged In!"})
     } catch (error) {
         return res.status(201).json({message : "Not logged In!"})
+    }
+})
+
+router.post('/getItems', checkAuth, async (req , res, next) => {
+    const id = req.cookies.userId;
+    console.log("userId :" + id);
+    try {
+        const User = require('../database/userSchema.js')
+        const Auction = require('../database/auctionSchema.js')
+        const existingUser = await User.findOne({id:id});
+        const auctionList = await Auction.find({ auction_id: { $in: existingUser.auctions } })
+        console.log(auctionList);
+        return res.status(200).json({auctionList})
+    } catch (err) {
+        res.status(400).json({message : "Unable to fetch User Items , please try reloading the page"});
     }
 })
 
