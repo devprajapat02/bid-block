@@ -16,7 +16,7 @@ dotenv.config()
 // const network = "http://127.0.0.1:7545"
 
 // const contractAddress = "0x9cb0B08E9862aA80606ab13D395236dBac1C90ea"
-const contractAddress = '0x33A2f8136ee1d04801Af201036bf1367D8d28d35'
+const contractAddress = '0x2b89fC06175DCAB4fac2f696Eda1350A67965153'
 const network = "https://rpc-mumbai.maticvigil.com/"
 
 const checkAuth = async (req, res, next) => {
@@ -68,6 +68,7 @@ const auctionParser = (data) => {
         ret.product_name = data.listed_product.product_name
         ret.base_price = ethers.BigNumber.from(data.listed_product.base_price).toString().slice(0, -15)
         ret.started = data.started
+        ret.starting_time = ethers.BigNumber.from(data.starting_time).toString()
         ret.auction_time = ethers.BigNumber.from(data.auction_time).toString()
         ret.end_time = ethers.BigNumber.from(data.end_time).toString()
         ret.owner = data.owner

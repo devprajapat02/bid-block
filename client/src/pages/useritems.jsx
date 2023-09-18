@@ -8,13 +8,25 @@ import { SegmentedControl,Loader } from '@mantine/core';
 export default function useritems() {
 
   const [AuctionItems, setAuctionItems] = useState([])
-  const [value, setValue] = useState('ongoing');
+  const [value, setValue] = useState('live');
   const [loader,isLoader] = useState(true);
 
   const fetchAuctions = async () => {
 
     const res = await post(`http://localhost:5000/userData/getItems`,{},true,false)
-    setAuctionItems(res.data.auctionList)
+    const items = []
+    res.data.auctionList.forEach((item)=>{
+      if (value == 'past' && new Date(item.end_time) < new Date() ) {
+        items.push(item)
+      }
+      if (value == 'live' && new Date(item.starting_time) < new Date() && new Date(item.end_time) > new Date()) {
+        items.push(item)
+      }
+      if (value == 'upcoming' && new Date(item.starting_time) > new Date()) {
+        items.push(item)
+      }
+    })
+    setAuctionItems(items)
     isLoader(false);
     console.log(res.data)
   }
@@ -36,7 +48,7 @@ export default function useritems() {
     useEffect(() => {
         isLoader(true);
         fetchAuctions()
-    }, [])
+    }, [value])
 
   return (
     <>
@@ -44,14 +56,15 @@ export default function useritems() {
       value={value}
       onChange={setValue}
       data={[
-        { label: 'Ongoing', value: 'ongoing' },
         { label: 'Past', value: 'past' },
+        { label: 'Live', value: 'live' },
         { label: 'Upcoming', value: 'upcoming' },
       ]}
       mb={30}
       radius={16}
       transitionDuration={500}
       transitionTimingFunction="linear"
+      disabled={loader}
       size="md"
     />
 

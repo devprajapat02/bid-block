@@ -62,7 +62,7 @@ const Authentication  = props => {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
       pinCode: (val) => (isNaN(val) ?  "Pincode should be a number." : null),
-      country: (val) => (country.find(entity => entity.value === val) !== undefined ? null : "Please choose a valid country"),
+      country: (val) => (val==='' && type ==='register' ? "Please choose a valid country":null),
       state: (val) => ( ((state.length===0 && val === '') || (val !== '')) ? null : "Please choose a valid State"),
       city: (val) => (((city.length===0 && val=== '' ) || (val !=='')) ? null: "Please choose a valid City"),
     },

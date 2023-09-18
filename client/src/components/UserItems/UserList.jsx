@@ -22,7 +22,7 @@ const UserList = props => {
     return <Grid >
         
         {props.items.map((item, id) => {
-            if (props.type === 'ongoing'){
+            if (props.type === 'live'){
                 return <LiveItem
                 key = {id}
                 auction_id = {item.auction_id}

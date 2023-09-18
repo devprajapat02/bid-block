@@ -14,7 +14,7 @@ export default function ImageDescription(props) {
 
     const ImageViewer = () => {
 
-        let img_src = props.meta.profile_image? props.meta.profile_image: `data:image/png;base64,${new identicon(stringToHex(props.meta.id), 250).toString()}`
+        let img_src = props.meta.profileImage? props.meta.profileImage: `data:image/png;base64,${new identicon(stringToHex(props.meta.id), 250).toString()}`
 
         return (
             <div className='img_container' style={{position: 'relative', flex: '0.6', margin: '2% 0% 2% 2%'}}>
@@ -38,12 +38,12 @@ export default function ImageDescription(props) {
                 <div className='row item-title' style={{fontSize: '20px', fontWeight: 'bold', marginTop: '5%'}}>
                     {props.meta.email}
                 </div>
-                {/* <div className='row item-title' style={{fontSize: '15px'}}>
-                    {props.meta.address.local}, {props.meta.address.city}, ({props.meta.address.zip})
+                <div className='row item-title' style={{fontSize: '15px'}}>
+                    {props.meta.address.local}, {props.meta.address.city} ({props.meta.address.pincode})
                 </div>
                 <div className='row item-title' style={{fontSize: '15px'}}>
                     {props.meta.address.state}, {props.meta.address.country}
-                </div> */}
+                </div>
             </div>
         </div>
     </>

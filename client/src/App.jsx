@@ -86,7 +86,7 @@ function App() {
 
       {/*
         Temporary code for development purposes
-      */}
+      
 
       <div>
         <h3>Dev mode</h3>
@@ -106,7 +106,7 @@ function App() {
         }}>Empty Contract Balance</button>
       </div>
 
-      {/*
+      
         Temporary code for development purposes
       */}
 

@@ -14,6 +14,8 @@ const TitleInput = props => {
           mt="md"
           size='lg'
           {...props.form.getInputProps('product_name')}
+          // value={props.form.values.product_name}
+          // onChange={(event) => {props.form.setFieldValue('product_name', event.currentTarget.value)}}
     />
 }
 
@@ -62,6 +64,7 @@ const StartingTime = props => {
     size='lg'
     value={date}
     onChange={(value) => {setDate(value); props.form.setFieldValue('starting_time', value.toString());}}
+    error={props.form.errors.starting_time}
   />
 }
 
@@ -78,6 +81,7 @@ const EndingTime = props => {
     size='lg'
     value={date}
     onChange={(value) => {setDate(value); props.form.setFieldValue('ending_time', value.toString());}}
+    error={props.form.errors.ending_time}
   />
 }
 
@@ -93,7 +97,8 @@ const formx = props => {
     },
 
     validate: {
-      
+      starting_time: (val) => (new Date() > new Date(val) ? 'Starting time should be greater than current time' : null),
+      ending_time: (val) => (new Date(form.values.starting_time) > new Date(val) ? 'Ending time should be greater than starting time' : null),
     },
   });
 
@@ -104,18 +109,19 @@ const formx = props => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const accounts = await provider.listAccounts();
     params.address = accounts[0];
+    console.log('siongh')
 
-    const res = await post('http://localhost:5000/createAuction', params, true, false)
-    if (res.status === 200) {
-      const signer = provider.getSigner(params.address);
-      const tx = await signer.sendTransaction(res.data.tx)
-      await tx.wait()
-      console.log(tx)
-      params.tx = tx.hash
-      params.auction_id = res.data.auction_id 
+    // const res = await post('http://localhost:5000/createAuction', params, true, false)
+    // if (res.status === 200) {
+    //   const signer = provider.getSigner(params.address);
+    //   const tx = await signer.sendTransaction(res.data.tx)
+    //   await tx.wait()
+    //   console.log(tx)
+    //   params.tx = tx.hash
+    //   params.auction_id = res.data.auction_id 
 
-      await post('http://localhost:5000/createAuction/mongo', params, true, true)
-    }
+    //   await post('http://localhost:5000/createAuction/mongo', params, true, true)
+    // }
   }
 
   return (
