@@ -34,7 +34,7 @@ function App() {
 
   const checkState = async () => {
     try{
-      const res = await axios.post('http://localhost:5000/userData/verify', {}, {withCredentials:true});
+      const res = await axios.post('https://bid-block-server.onrender.com/userData/verify', {}, {withCredentials:true});
       console.log(res);
       if(res.status === 200 ){
           console.log("State restored")
@@ -93,7 +93,7 @@ function App() {
         <button onClick={() => {
           const fn = async () => {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-            const res = await axios.post('http://localhost:5000/emergencyWithdraw', {address: accounts[0]})
+            const res = await axios.post('https://bid-block-server.onrender.com/emergencyWithdraw', {address: accounts[0]})
 
             const provider = new ethers.providers.Web3Provider(window.ethereum)
             const signer = provider.getSigner(accounts[0])

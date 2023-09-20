@@ -13,7 +13,7 @@ function Home(){
 
     const fetchAuctions = async () => {
 
-        const res = await axios.get(`http://localhost:5000/auctionData/getItems/${auctionStage}?briefs=true`)
+        const res = await axios.get(`https://bid-block-server.onrender.com/auctionData/getItems/${auctionStage}?briefs=true`)
         setAuctionItems(res.data)
         isLoader(false);
         console.log(res.data)

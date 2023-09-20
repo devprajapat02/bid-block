@@ -107,14 +107,14 @@ const Authentication  = props => {
     
     if(type === "login"){
 
-      const res = await post('http://localhost:5000/userData/login', form.values, true, true);
+      const res = await post('https://bid-block-server.onrender.com/userData/login', form.values, true, true);
       if (res.status === 200) {
         Auth.login();
       }
 
     } else if (type === "register"){
 
-      const res = await post('http://localhost:5000/userData/signup', form.values, true, true)
+      const res = await post('https://bid-block-server.onrender.com/userData/signup', form.values, true, true)
       if (res.status === 200) {
         Auth.login();
       }

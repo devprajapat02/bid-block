@@ -14,7 +14,7 @@ export default function ItemDesciption() {
 
   const fetchAuction = async () => {
     setLoader(true)
-    const res = await axios.get(`http://localhost:5000/auctionData/getItem?auction_id=${id}`)
+    const res = await axios.get(`https://bid-block-server.onrender.com/auctionData/getItem?auction_id=${id}`)
     if (res.status != 200) return
     setAuction(res.data)
     console.log(res.data)

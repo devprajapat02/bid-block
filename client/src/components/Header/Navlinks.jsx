@@ -11,7 +11,7 @@ const Navlinks = props =>{
     
     async function logoutHandler(){
 
-        const res = await post('http://localhost:5000/userData/logout', {}, true, true);
+        const res = await post('https://bid-block-server.onrender.com/userData/logout', {}, true, true);
         if (res.status === 200) {
             auth.logout()
         }

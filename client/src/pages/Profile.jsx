@@ -12,7 +12,7 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     setLoader(true)
-    const res = await axios.post('http://localhost:5000/userData/id', {}, {withCredentials: true})
+    const res = await axios.post('https://bid-block-server.onrender.com/userData/id', {}, {withCredentials: true})
     setUserData(res.data.user)
     console.log(res.data.user)
     setLoader(false)

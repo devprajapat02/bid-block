@@ -111,7 +111,7 @@ const formx = props => {
     params.address = accounts[0];
     console.log('siongh')
 
-    // const res = await post('http://localhost:5000/createAuction', params, true, false)
+    // const res = await post('https://bid-block-server.onrender.com/createAuction', params, true, false)
     // if (res.status === 200) {
     //   const signer = provider.getSigner(params.address);
     //   const tx = await signer.sendTransaction(res.data.tx)
@@ -120,7 +120,7 @@ const formx = props => {
     //   params.tx = tx.hash
     //   params.auction_id = res.data.auction_id 
 
-    //   await post('http://localhost:5000/createAuction/mongo', params, true, true)
+    //   await post('https://bid-block-server.onrender.com/createAuction/mongo', params, true, true)
     // }
   }
 

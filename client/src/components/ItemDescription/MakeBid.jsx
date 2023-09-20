@@ -15,7 +15,7 @@ export default function MakeBid(props) {
   const fetchAccount = async () => {
     setLoader(true)
     const account = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    const res = await axios.post("http://localhost:5000/auctionData/getWithdrawalAmount", {
+    const res = await axios.post("https://bid-block-server.onrender.com/auctionData/getWithdrawalAmount", {
       address: account[0],
       auction_id: props.meta.block_data.auction_id
     })
@@ -45,7 +45,7 @@ export default function MakeBid(props) {
       bid_value: bid - withdrawal
     }
 
-    const res = await post("http://localhost:5000/makeBid", params, true, false)
+    const res = await post("https://bid-block-server.onrender.com/makeBid", params, true, false)
     
     if (res.status === 200) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -54,7 +54,7 @@ export default function MakeBid(props) {
       const tx = await signer.sendTransaction(res.data.tx)
       await tx.wait()
       params.tx = tx.hash
-      await post("http://localhost:5000/makeBid/mongo", params, true, true)
+      await post("https://bid-block-server.onrender.com/makeBid/mongo", params, true, true)
     }
 
   }
@@ -66,7 +66,7 @@ export default function MakeBid(props) {
       auction_id: props.meta.block_data.auction_id
     }
 
-    const res = await post("http://localhost:5000/withdrawBid", params, true, true)
+    const res = await post("https://bid-block-server.onrender.com/withdrawBid", params, true, true)
     if (res.status === 201) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner(accounts[0]);

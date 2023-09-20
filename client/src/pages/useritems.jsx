@@ -13,7 +13,7 @@ export default function useritems() {
 
   const fetchAuctions = async () => {
 
-    const res = await post(`http://localhost:5000/userData/getItems`,{},true,false)
+    const res = await post(`https://bid-block-server.onrender.com/userData/getItems`,{},true,false)
     const items = []
     res.data.auctionList.forEach((item)=>{
       if (value == 'past' && new Date(item.end_time) < new Date() ) {
