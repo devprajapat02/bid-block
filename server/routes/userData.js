@@ -31,7 +31,7 @@ const validateParams = (req, res, next) => {
 }
 
 router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     if(!req.body.name) {
         res.status(400).json({error: "Missing Parameter - Name"})
         return ;
@@ -129,7 +129,7 @@ router.post('/signup', validateParams ,connectDB, async (req , res, next ) => {
 })
 
 router.post('/login', validateParams, connectDB ,async (req , res, next ) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     const {email,password} = req.body;
 
     // validate input
@@ -208,7 +208,7 @@ router.post('/id', checkAuth , connectDB , async (req , res, next ) => {
 })
 
 router.post('/logout', checkAuth, async (req , res, next) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     try {
         console.log(req.cookies)
         res.clearCookie("jwt");
@@ -220,7 +220,7 @@ router.post('/logout', checkAuth, async (req , res, next) => {
 })
 
 router.post('/verify', async (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     try {
         let cookies = {};
         if (!req.headers.cookie) {

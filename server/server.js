@@ -14,10 +14,10 @@ const app = express()
 app.use(express.json({limit: '50mb'}));
 // app.use(express.json())
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
-app.use(cors({credentials:true,origin : 'http://localhost:5173'}))
+app.use(cors({credentials:true,origin : process.env.CLIENT_URL}))
 
 app.use((req,res,next) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader(
         'Access-Control-Allow-Headers',
@@ -43,7 +43,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors(
     {
         credentials: true,
-        origin: 'http://localhost:5173'
+        origin: process.env.CLIENT_URL
     }
 ))
 

@@ -17,7 +17,7 @@ const validateParams = (req, res, next) => {
 }
 
 router.post('/', validateParams, async (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     try {
         const provider = new ethers.providers.JsonRpcProvider(network)
         const signer = await provider.getSigner(req.body.address)

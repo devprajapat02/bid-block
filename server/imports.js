@@ -20,7 +20,7 @@ const contractAddress = '0x2b89fC06175DCAB4fac2f696Eda1350A67965153'
 const network = "https://rpc-mumbai.maticvigil.com/"
 
 const checkAuth = async (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin',process.env.CLIENT_URL);
     try {
         let cookies = {};
 
